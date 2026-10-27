@@ -1,33 +1,127 @@
 'use strict';
 const hazards = [
- {title:'Racking is not a ladder.',name:'Climbing the racking',x:26.4,y:37,detail:'A worker is using the storage racking to reach stock. A slip could cause a serious fall.',question:'What is the safest response?',choices:['Hold the racking steady while they finish.','Ask them to stop; arrange suitable access equipment with the supervisor.','Suggest climbing a little more slowly.'],correct:1,why:'Racking is designed for storage, not access. Stop the unsafe task and arrange suitable access equipment through the supervisor. Only use equipment you are trained and authorised to use.',retry:'Holding the rack or climbing more carefully does not remove the fall risk. Choose a response that stops the unsafe method.',takeaway:'Never climb racking. Stop and arrange suitable access equipment.'},
- {title:'A spill changes the next step.',name:'Spillage in the aisle',x:48,y:79,detail:'Liquid has spread across a walking route. The container’s contents are not known.',question:'What should happen first?',choices:['Keep people clear and report it; follow the site spill procedure.','Wipe it up immediately with whatever is nearby.','Step around it and carry on working.'],correct:0,why:'Keep others away and report the spill. Follow the site procedure; identify the substance before clean-up. Only clean it if trained and equipped to do so.',retry:'Walking past leaves the risk for someone else. An unknown liquid also needs assessment before clean-up.',takeaway:'Keep people clear. Report the spill and follow the site procedure.'},
- {title:'One box can bring down the rest.',name:'Unstable stacked boxes',x:79,y:58,detail:'The boxes lean and overhang the stack below. They could fall into the aisle.',question:'How would you make this safer?',choices:['Pull out the bottom box to straighten the stack.','Catch the top box if it starts to fall.','Keep clear and report the unstable load for safe restacking.'],correct:2,why:'Keep people clear of the falling-load area and report it. Arrange safe restacking by trained people using suitable equipment. Do not pull at the load or try to catch falling boxes.',retry:'Touching the unstable load could bring it down. Keep clear and arrange a controlled response.',takeaway:'Keep clear of unstable loads. Report and arrange safe restacking.'},
-{"title": "A clear exit needs a clear route.", "name": "Blocked emergency exit", "x": 77, "y": 53, "detail": "A small pallet of cartons obstructs the emergency exit at the back of the warehouse.", "question": "What is the safest response?", "choices": ["Leave it until the next shift.", "Report it immediately and arrange for the escape route to be cleared safely.", "Assume another exit will be enough."], "correct": 1, "why": "Emergency escape routes must remain available. Report the obstruction immediately and follow site procedures to have it removed safely.", "retry": "An alternative exit does not make an obstructed escape route acceptable.", "takeaway": "Keep emergency exits and their approaches clear."},
+ {title:'Racking is not a ladder.',name:'Climbing the racking',x:25.1,y:31.7,detail:'A worker is using the storage racking to reach stock. A slip could cause a serious fall.',question:'What is the safest response?',choices:['Hold the racking steady while they finish.','Ask them to stop; arrange suitable access equipment with the supervisor.','Suggest climbing a little more slowly.'],correct:1,why:'Racking is designed for storage, not access. Stop the unsafe task and arrange suitable access equipment through the supervisor. Only use equipment you are trained and authorised to use.',retry:'Holding the rack or climbing more carefully does not remove the fall risk. Choose a response that stops the unsafe method.',takeaway:'Never climb racking. Stop and arrange suitable access equipment.'},
+ {title:'A spill changes the next step.',name:'Spillage in the aisle',x:49,y:79.6,detail:'Liquid has spread across a walking route. The container’s contents are not known.',question:'What should happen first?',choices:['Keep people clear and report it; follow the site spill procedure.','Wipe it up immediately with whatever is nearby.','Step around it and carry on working.'],correct:0,why:'Keep others away and report the spill. Follow the site procedure; identify the substance before clean-up. Only clean it if trained and equipped to do so.',retry:'Walking past leaves the risk for someone else. An unknown liquid also needs assessment before clean-up.',takeaway:'Keep people clear. Report the spill and follow the site procedure.'},
+ {title:'One box can bring down the rest.',name:'Unstable stacked boxes',x:65,y:68,detail:'The boxes lean and overhang the stack below. They could fall into the aisle.',question:'How would you make this safer?',choices:['Pull out the bottom box to straighten the stack.','Catch the top box if it starts to fall.','Keep clear and report the unstable load for safe restacking.'],correct:2,why:'Keep people clear of the falling-load area and report it. Arrange safe restacking by trained people using suitable equipment. Do not pull at the load or try to catch falling boxes.',retry:'Touching the unstable load could bring it down. Keep clear and arrange a controlled response.',takeaway:'Keep clear of unstable loads. Report and arrange safe restacking.'},
+{"title": "A clear exit needs a clear route.", "name": "Blocked emergency exit", "x": 77.2, "y": 53.5, "detail": "A small pallet of cartons obstructs the emergency exit at the back of the warehouse.", "question": "What is the safest response?", "choices": ["Leave it until the next shift.", "Report it immediately and arrange for the escape route to be cleared safely.", "Assume another exit will be enough."], "correct": 1, "why": "Emergency escape routes must remain available. Report the obstruction immediately and follow site procedures to have it removed safely.", "retry": "An alternative exit does not make an obstructed escape route acceptable.", "takeaway": "Keep emergency exits and their approaches clear."},
 {"title": "Small damage can signal a bigger risk.", "name": "Damaged racking upright", "x": 38.2, "y": 64, "detail": "An upright near floor level is bent and cracked. Stock remains above it.", "question": "What should you do?", "choices": ["Report the damage immediately and keep clear under the site procedure.", "Straighten it with a tool.", "Carry on if the stock looks stable."], "correct": 0, "why": "Report suspected racking damage immediately. Keep people clear as required by site procedures and have authorised people assess it. Do not repair or continue using damaged racking yourself.", "retry": "Appearance alone cannot establish that damaged racking is safe. Do not try to straighten it.", "takeaway": "Report racking damage. Keep clear and arrange an authorised assessment."},
-{"title": "A small loop can catch a foot.", "name": "Discarded packing strap", "x": 25, "y": 87, "detail": "A loose loop of packing strap lies across the edge of a walking route.", "question": "How should you respond?", "choices": ["Kick it under the shelving.", "Step over it and leave it.", "Remove it safely if safe to do so, using the designated waste procedure."], "correct": 2, "why": "Discarded strapping is a trip hazard. If safe to do so, remove it using site housekeeping and waste procedures; otherwise keep people clear and report it.", "retry": "Moving the strap out of sight or stepping over it leaves the hazard for someone else.", "takeaway": "Keep routes clear of packaging and dispose of strapping safely."}
+{"title": "A small loop can catch a foot.", "name": "Discarded packing strap", "x": 29.2, "y": 87.8, "detail": "A loose loop of packing strap lies across the edge of a walking route.", "question": "How should you respond?", "choices": ["Kick it under the shelving.", "Step over it and leave it.", "Remove it safely if safe to do so, using the designated waste procedure."], "correct": 2, "why": "Discarded strapping is a trip hazard. If safe to do so, remove it using site housekeeping and waste procedures; otherwise keep people clear and report it.", "retry": "Moving the strap out of sight or stepping over it leaves the hazard for someone else.", "takeaway": "Keep routes clear of packaging and dispose of strapping safely."}
 ];
-const panel=document.querySelector('#panel'), pins=[...document.querySelectorAll('.pin')],recap=document.querySelector('#recap');
-const idle=panel.innerHTML;let current=null,reviewed=new Set(),attempted=new Set();
-function focusTitle(){panel.querySelector('h2').focus({preventScroll:true});}
-function progress(){document.querySelector('#count').textContent=`${reviewed.size} of ${hazards.length} reviewed`;document.querySelectorAll('.segments i').forEach((s,i)=>s.classList.toggle('done',i<reviewed.size));pins.forEach((p,i)=>{p.classList.toggle('reviewed',reviewed.has(i));p.querySelector('span').textContent=reviewed.has(i)?'✓':`0${i+1}`;p.setAttribute('aria-label',`Inspect area ${i+1}: ${hazards[i].name}${reviewed.has(i)?', reviewed':''}`);});}
-function select(i){current=i;hideLens();pins.forEach((p,j)=>p.setAttribute('aria-expanded',String(i===j)));const h=hazards[i];panel.innerHTML=`<div class="arrive"><div class="inspection" aria-hidden="true"><img src="assets/warehouse.svg" style="--tx:${-h.x+18}%;--ty:${-h.y+9}%" alt=""></div><button class="back">← Back to scene</button><p class="eyebrow">Inspection 0${i+1} / ${String(hazards.length).padStart(2,'0')} ${reviewed.has(i)?'· Reviewed':''}</p><h2 id="panel-title" class="question" tabindex="-1">${h.title}</h2><p>${h.detail}</p><p><strong>${h.question}</strong></p><div class="choices">${h.choices.map((c,j)=>`<button class="choice" data-answer="${j}" data-letter="${String.fromCharCode(65+j)}">${c}</button>`).join('')}</div><div id="feedback" aria-live="polite"></div></div>`;panel.querySelector('.back').onclick=back;panel.querySelectorAll('.choice').forEach(b=>b.onclick=()=>answer(Number(b.dataset.answer)));focusTitle();if(matchMedia('(max-width: 740px)').matches)panel.scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}
-function back(){const last=current;current=null;panel.innerHTML=idle;pins.forEach(p=>p.setAttribute('aria-expanded','false'));pins[last??0].focus({preventScroll:true});}
-function answer(j){const h=hazards[current],correct=j===h.correct,box=panel.querySelector('#feedback');panel.querySelectorAll('.choice').forEach(b=>{b.classList.remove('wrong');b.removeAttribute('aria-pressed');});const chosen=panel.querySelector(`[data-answer="${j}"]`);chosen.classList.add(correct?'correct':'wrong');chosen.setAttribute('aria-pressed','true');if(correct){reviewed.add(current);progress();panel.querySelectorAll('.choice').forEach(b=>b.disabled=true);box.innerHTML=`<div class="feedback"><b>That’s the safe response.</b><p>${h.why}</p><button class="primary" id="continue">${reviewed.size===hazards.length?'See your field notes →':'Continue exploring →'}</button></div>`;panel.querySelector('#continue').onclick=()=>{if(reviewed.size===hazards.length)finish();else{const next=pins.findIndex((p,i)=>!reviewed.has(i));back();pins[next].focus({preventScroll:true});}};}else{attempted.add(current);box.innerHTML=`<div class="feedback retry"><b>Pause and reconsider.</b><p>${h.retry}</p></div>`;}}
-function finish(){back();recap.hidden=false;recap.innerHTML=`<p class="eyebrow">Field notes / All ${hazards.length} hazards reviewed</p><h2 id="recap-title" tabindex="-1">Spot it. Stop. Make it safe.</h2><p>You’ve practised ${hazards.length} decisions that can protect you and the people around you.</p><div class="takeaways">${hazards.map((h,i)=>`<article><span>0${i+1} / ${h.name}</span><h3>${h.title}</h3><p>${h.takeaway}</p></article>`).join('')}</div><p>This is activity progress only. It does not record completion in Nucleus.</p><button class="primary" id="restart">Explore again ↻</button>`;document.querySelector('#restart').onclick=reset;recap.querySelector('h2').focus({preventScroll:true});recap.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});}
-function reset(){reviewed.clear();attempted.clear();recap.hidden=true;panel.innerHTML=idle;current=null;pins.forEach(p=>p.setAttribute('aria-expanded','false'));progress();pins[0].focus();}
-pins.forEach((p,i)=>{p.setAttribute('aria-expanded','false');p.setAttribute('aria-controls','panel');p.onclick=()=>select(i);p.onkeydown=e=>{if(['ArrowRight','ArrowDown','ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();pins[(i+(['ArrowRight','ArrowDown'].includes(e.key)?1:hazards.length-1))%hazards.length].focus();}};});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){hideLens();if(current!==null)back();}});
-const scene=document.querySelector('#scene'),lens=document.querySelector('#lens');
-function hideLens(){lens.classList.remove('on');}
-function moveLens(x,y){const r=scene.getBoundingClientRect(),px=Math.max(0,Math.min(r.width,x-r.left)),py=Math.max(0,Math.min(r.height,y-r.top));lens.classList.add('on');const size=lens.offsetWidth; lens.style.left=`${px}px`;lens.style.top=`${py}px`;lens.style.backgroundSize=`${r.width*2.5}px ${r.height*2.5}px`;lens.style.backgroundPosition=`${size/2-px*2.5}px ${size/2-py*2.5}px`;}
-scene.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')moveLens(e.clientX,e.clientY);});
-scene.addEventListener('pointermove',e=>{if(e.pointerType!=='touch')moveLens(e.clientX,e.clientY);});
-scene.addEventListener('pointerleave',hideLens);
-scene.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&e.target===scene.querySelector('img'))moveLens(e.clientX,e.clientY);});
-scene.addEventListener('pointerup',e=>{if(e.pointerType==='touch')hideLens();});
-scene.addEventListener('pointercancel',hideLens);
-pins.forEach((p,i)=>p.addEventListener('focus',()=>{const r=scene.getBoundingClientRect();moveLens(r.left+r.width*hazards[i].x/100,r.top+r.height*hazards[i].y/100);}));
+
+const crops = [ [265,185,230,280], [600,650,215,155], [850,500,180,220], [1020,288,215,245], [495,520,120,120], [355,750,140,100] ];
+const panel=document.querySelector('#panel'), scene=document.querySelector('#scene'), lens=document.querySelector('#lens');
+const workspace=document.querySelector('#workspace'), recap=document.querySelector('#recap');
+document.documentElement.style.setProperty('--scene-image', `url("${document.querySelector('#warehouse').src}")`);
+let current=null;
+const reviewed=new Set();
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+const markers=document.querySelector('#markers');
+markers.innerHTML=hazards.map((h,i)=>`<button type="button" class="pin" style="--x:${h.x}%;--y:${h.y}%" data-hazard="${i}" aria-label="Area ${i+1}: ${h.name}" aria-controls="panel" aria-expanded="false" aria-describedby="keyboard-help"><span>${i+1}</span></button>`).join('');
+const pins=[...markers.querySelectorAll('.pin')];
+function progress(){
+ document.querySelector('#count').textContent=`${reviewed.size} of ${hazards.length} reviewed`;
+ document.querySelector('#progress').value=reviewed.size;
+ pins.forEach((p,i)=>{p.classList.toggle('reviewed',reviewed.has(i));p.querySelector('span').textContent=reviewed.has(i)?'✓':String(i+1);p.setAttribute('aria-label',`Area ${i+1}: ${hazards[i].name}${reviewed.has(i)?', reviewed':''}`);});
+ recap.hidden=reviewed.size!==hazards.length;
+}
+function select(i){
+ cancelTouch();hideLens();current=i;
+ const h=hazards[i];
+ pins.forEach((p,j)=>p.setAttribute('aria-expanded',String(i===j)));
+ panel.hidden=false;workspace.classList.add('inspecting');
+ panel.innerHTML=`<button class="back" type="button">← Return to scene</button><div class="inspection"><svg viewBox="${crops[i].join(' ')}" role="img" aria-label="Close-up: ${h.name}" preserveAspectRatio="xMidYMid meet"><image href="${document.querySelector('#warehouse').src}" width="1440" height="900"/></svg></div><div class="decision"><p class="eyebrow">Area ${i+1} of ${hazards.length}${reviewed.has(i)?' · Reviewed':''}</p><h2 id="panel-title" tabindex="-1">${h.name}</h2><p class="description">${h.detail}</p><h3>${h.question}</h3><div class="choices">${h.choices.map((c,j)=>`<button class="choice" type="button" data-answer="${j}"><span aria-hidden="true">${String.fromCharCode(65+j)}</span>${c}</button>`).join('')}</div><div id="feedback" role="status" aria-live="polite"></div></div>`;
+ panel.querySelector('.back').onclick=back;
+ panel.querySelectorAll('.choice').forEach(b=>b.onclick=()=>answer(Number(b.dataset.answer)));
+ if(reviewed.has(i))showCorrect(h);
+ panel.querySelector('h2').focus({preventScroll:true});
+}
+function back(){
+ if(current===null)return;
+ const last=current;current=null;panel.hidden=true;workspace.classList.remove('inspecting');
+ pins.forEach(p=>p.setAttribute('aria-expanded','false'));
+ pins[last].focus({preventScroll:true});
+}
+function showCorrect(h){
+ const buttons=[...panel.querySelectorAll('.choice')];
+ buttons.forEach((b,i)=>{b.setAttribute('aria-disabled','true');b.classList.toggle('correct',i===h.correct);});
+ panel.querySelector('#feedback').innerHTML=`<div class="feedback"><strong>Safe response</strong><p>${h.why}</p><button type="button" class="primary" id="continue">Return to scene →</button></div>`;
+ panel.querySelector('#continue').onclick=back;
+}
+function answer(j){
+ if(current===null||reviewed.has(current))return;
+ const h=hazards[current];
+ panel.querySelectorAll('.choice').forEach(b=>b.classList.remove('wrong'));
+ if(j===h.correct){reviewed.add(current);progress();showCorrect(h);}
+ else{
+  panel.querySelector(`[data-answer="${j}"]`).classList.add('wrong');
+  panel.querySelector('#feedback').innerHTML=`<div class="feedback retry"><strong>Reconsider your response</strong><p>${h.retry}</p></div>`;
+ }
+}
+function reset(){
+ if(current!==null)back();reviewed.clear();progress();hideLens();
+ pins[0].focus({preventScroll:true});
+}
+document.querySelector('#restart').onclick=reset;
+pins.forEach((p,i)=>{
+ p.onclick=()=>select(i);
+ p.onkeydown=e=>{
+  const directions=['ArrowRight','ArrowDown','ArrowLeft','ArrowUp'];
+  if(directions.includes(e.key)){e.preventDefault();pins[(i+(directions.indexOf(e.key)<2?1:pins.length-1))%pins.length].focus({preventScroll:true});}
+  if(e.key==='Home'||e.key==='End'){e.preventDefault();pins[e.key==='Home'?0:pins.length-1].focus({preventScroll:true});}
+ };
+ p.addEventListener('focus',()=>{if(current===null)inspectMarker(i);});
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){cancelTouch();hideLens();back();}});
+// Keep the vector sample and lens position in the same frame, including at scene edges.
+let target=null,position=null,frame=0;
+function paint(point){
+ const r=scene.getBoundingClientRect(),radius=lens.offsetWidth/2;
+ const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+ const sx=clamp(point.x,0,r.width),sy=clamp(point.y,0,r.height);
+ const cx=clamp(sx,radius+5,r.width-radius-5);
+ const cy=clamp(sy-radius-30,radius+5,r.height-radius-5);
+ lens.style.left=`${cx}px`;lens.style.top=`${cy}px`;
+ const zoom=3;
+ lens.style.backgroundSize=`${r.width*zoom}px ${r.height*zoom}px`;
+ lens.style.backgroundPosition=`${radius-sx*zoom}px ${radius-sy*zoom}px`;
+ pins.forEach((p,i)=>p.classList.toggle('near',Math.hypot(sx-r.width*hazards[i].x/100,sy-r.height*hazards[i].y/100)<Math.max(55,r.width*.07)));
+}
+function animateLens(){
+ frame=0;if(!target)return;
+ const dx=target.x-position.x,dy=target.y-position.y;
+ if(reduced.matches||Math.hypot(dx,dy)<.2){position={...target};paint(position);return;}
+ position.x+=dx*.35;position.y+=dy*.35;paint(position);frame=requestAnimationFrame(animateLens);
+}
+function moveLens(clientX,clientY,immediate=false){
+ if(current!==null)return;
+ const r=scene.getBoundingClientRect();target={x:clientX-r.left,y:clientY-r.top};
+ lens.classList.add('on');
+ if(!position||immediate||reduced.matches){position={...target};paint(position);}
+ if(!frame)frame=requestAnimationFrame(animateLens);
+}
+function hideLens(){
+ lens.classList.remove('on');target=null;position=null;
+ if(frame)cancelAnimationFrame(frame);frame=0;pins.forEach(p=>p.classList.remove('near'));
+}
+function inspectMarker(i){const r=scene.getBoundingClientRect();moveLens(r.left+r.width*hazards[i].x/100,r.top+r.height*hazards[i].y/100,true);}
+scene.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')moveLens(e.clientX,e.clientY,true);});
+scene.addEventListener('pointermove',e=>{
+ if(e.pointerType!=='touch'){moveLens(e.clientX,e.clientY);return;}
+ if(touchStart&&Math.hypot(e.clientX-touchStart.x,e.clientY-touchStart.y)>10)cancelTouch();
+});
+scene.addEventListener('pointerleave',()=>{cancelTouch();hideLens();});
+// A still hold inspects. Any movement cancels; never prevent the browser's scroll/pinch gesture.
+let touchTimer=0,touchStart=null;
+function cancelTouch(){clearTimeout(touchTimer);touchTimer=0;touchStart=null;hideLens();}
+scene.addEventListener('pointerdown',e=>{
+ if(e.pointerType!=='touch'||e.target.closest('.pin')||current!==null)return;
+ cancelTouch();touchStart={x:e.clientX,y:e.clientY};
+ touchTimer=setTimeout(()=>{if(touchStart)moveLens(touchStart.x,touchStart.y,true);},320);
+});
+scene.addEventListener('pointerup',e=>{if(e.pointerType==='touch')cancelTouch();});
+scene.addEventListener('pointercancel',cancelTouch);
+scene.addEventListener('contextmenu',e=>{if(touchStart)e.preventDefault();});
 scene.addEventListener('focusout',e=>{if(!scene.contains(e.relatedTarget))hideLens();});
-window.addEventListener('resize',hideLens);
+window.addEventListener('resize',()=>{cancelTouch();hideLens();});
+window.addEventListener('blur',cancelTouch);
 progress();

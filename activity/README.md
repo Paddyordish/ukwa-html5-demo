@@ -1,29 +1,39 @@
-# UKWA · Spot the hazard
+# UKWA warehouse practice for Nucleus V2
 
-Open `index.html` in a modern browser, or serve this directory from any static host. No build, dependencies, external fonts, analytics, storage or LMS APIs. All assets are local. The entire activity is approximately 35 KB before compression.
+A small practice interaction between native Nucleus introduction/objective and assessment blocks. This revision builds on PR #3's supplied official logo, Raleway, six-hazard vector scene, decisions and automatic lens. It does not replace that work with a second implementation.
 
-## Embed
+## Run and embed
 
-Host this directory over HTTPS and point the course iframe at its `index.html`. Use `title="UKWA warehouse hazard practice"`, `width="100%"` and an initial height of around 1000px. Allow vertical scrolling: content grows when feedback and the recap appear, particularly on mobile. If the host uses a sandbox, scripts must be allowed. There is no undocumented parent messaging or automatic height integration. Test actual course sizing and native navigation using the preserved `../embed-test.html` and sandbox checklist.
+Serve the repository root and embed `activity/index.html` over HTTPS with a descriptive iframe title and width 100%. Keep the parent `assets/brand/` folder: the official logo is referenced from there. Start around 850px high on desktop and allow vertical scrolling; mobile decisions below the image need more height. Native sizing and navigation must be checked in Nucleus V2. Scripts are required. No automatic parent resizing or undocumented messaging is used.
 
-Internal progress is practice only. Reloading resets it. No Nucleus completion, SCORM communication, score reporting or durable resume is implemented.
+`preview.html` is the same activity with the exact logo and vector scene embedded. Open it directly or serve it. Generate it with `python3 scripts/build-preview.py` after changing the activity, scene or logo. Do not edit the generated preview separately. Raleway uses the existing Google Fonts request with system fallbacks; test the font request under the host's content policy.
 
-## Content and assets
+The production GitHub Pages copy remains controlled by the repository's existing publication route. This work is proposed on a branch; neither main nor its live site is overwritten without merge. The hosted review Page contains the same generated preview.
 
-The improved `Warehouse_Operations_Rise_Development_Pack copy.zip` and original SCORM were unavailable in this execution session (not attached/mounted; no matching accessible shared source was located). This build does **not** claim to have inspected either archive. Content selection follows the existing repository's `docs/demo-plan.md`, which identifies Unit 2, page 99909 and the three hazards: climbing racking, spillage and unstable boxes. Responses and feedback are newly authored conservative practice copy and need review against the original course before course use.
+## Layout and controls
 
-`assets/warehouse.svg` is an original vector illustration created for this experiment, not extracted from either source archive. Its hazards and percentage hotspots share a 1440 × 900 coordinate system. The scene always retains that aspect ratio, with no cover cropping. Replace the illustration and recalibrate coordinates together if the supplied image is recovered.
+Initially only the understated, proportionate official logo, compact activity progress and full-width scene appear, with a single exploration hint. Six 18px markers retain 44px targets. They remain visible, brighten near the lens and have distinct keyboard focus. Feature coordinates drive both marker placement and keyboard inspection; the scene retains its 1440 × 900 aspect ratio without cover cropping. Target separation is checked down to 320px width.
 
-## Interaction and access
+Mouse/pen entry shows the lens immediately. Its position and sampled vector region ease together; reduced motion updates immediately. It is offset above the sampled detail, constrained to the image and never intercepts input. It disappears on pointer exit and while a decision is open.
 
-Three native hotspot buttons; Tab and Enter/Space activate controls. Arrow keys move between markers. Escape returns to the scene and restores marker focus. The optional magnifier supports pointer/touch and arrow keys while its button has focus. Each inspection has an enlarged crop and textual description. Responses remain available after a wrong choice; progress increments once per correctly reviewed hazard. All three lead to a recap and restart. Reduced motion removes animation and smooth scrolling.
+Touch users hold the image still for 320ms to inspect. Movement beyond 10px, release, pointer cancellation, loss of window focus or resize cancels inspection. No touch movement is prevented and no pointer is captured: vertical scrolling and pinch zoom stay native. Tapping a marker opens its close-up directly. Physical touch-device testing is still needed.
 
-## Validation — 27 October 2026
+Tab reaches every marker; arrows wrap, Home/End reach first/last. Marker focus magnifies its feature. Enter/Space opens a decision and focuses the heading without forced scrolling. Escape and Return to scene restore marker focus. Desktop decisions overlay the scene's right side without resizing it; markers are hidden while the decision is open. On smaller screens the panel follows the image. The panel has its own vertical overflow when needed on desktop; native course navigation remains reachable by Tab. There is no focus trap or scripted scrolling.
 
-- JavaScript syntax check passed.
-- DOM journey passed: wrong response and retry; three correct responses; progress deduplication; revisiting; recap; reset; marker arrow navigation; Escape; focus calls; magnifier toggle.
-- SVG XML and asset references checked; no external runtime dependencies.
-- `embed-test.html` is byte-for-byte unchanged from main.
-- **Browser rendering, real mobile/touch, assistive technology and Nucleus embedding remain unverified.** Browser automation was unavailable in the environment; its configured HTTP proxy also refused connections. DOM checks do not establish browser layout or accessibility conformance.
+Correct decisions count once and remain reviewable. Wrong answers offer retry. All six reveal a short summary and restart. No score or assessed pass condition is shown.
 
-Before course use, verify at desktop, tablet and 375px mobile widths, at 200% zoom, with keyboard and reduced motion, and inside the actual Nucleus block. Review learning copy against the original SCORM and replace the fallback artwork if preferred.
+## Tracking and content boundaries
+
+Progress exists in this document's memory only. Reload resets it. It does not call Nucleus, SCORM, xAPI, storage or completion APIs, and does not record course completion or durable resume. Those limitations belong in these developer notes, not the learner interface. Use native blocks for assessed checks and supported course tracking.
+
+The original SCORM and improved development ZIP remain unavailable in this session. Hazard selection and response copy are inherited from PR #3 and the repository's source notes, with original vector artwork rather than an extracted source image. Review all six responses against course content and site procedures before production use. Branding bytes remain unchanged; see `../docs/branding.md`.
+
+## Validation on 27 October 2026
+
+Passed: JavaScript syntax; DOM-driven journey through all six correct responses and retries, revisiting, progress deduplication, summary/reset, keyboard wrap/Home, focus/Escape, lens entry/movement/exit, touch hold/release/movement/cancel and suppression during decisions. DOM emulation checks logic, not browser layout.
+
+Passed: SVG XML; independent feature/marker alignment calculations; non-overlapping 44px targets at 320, 375, 768, 1024 and 1440px; exact Git blob hashes for the supplied logo and original embed test; reproducible standalone preview generation; no forced scrolling or leftover course-page/technical tracking copy.
+
+Not completed: rendered desktop/mobile layout, actual pointer and touchscreen gestures, font loading, reduced-motion rendering, screen-reader use or Nucleus V2 embedding. Chromium failed to launch because the sandbox rejected its crashpad socket. The configured runtime proxy also refused outbound connections. These are explicit verification limits, not passed browser checks.
+
+Re-run static checks with `python3 tests/check-assets.py` from the repository root. For browser checks: `npm install`, `npx playwright install chromium`, then `npm run test:browser`. Set `CHROMIUM_PATH` only when using an already installed browser. The committed browser test covers five viewport widths, full journeys, marker geometry, fixed scene dimensions, overflow, keyboard focus, lens and synthetic touch events, and saves screenshots in ignored `work/`. Physical scrolling/pinch and in-course testing remain separate.

@@ -1,0 +1,1 @@
+{"name":"ukwa-warehouse-practice","private":true,"scripts":{"build:preview":"python3 scripts/build-preview.py","test:browser":"node tests/browser.cjs","test:static":"python3 tests/check-assets.py"},"devDependencies":{"playwright":"^1.56.0"}}

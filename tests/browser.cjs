@@ -10,7 +10,7 @@ const path=require('node:path'),fs=require('node:fs'),http=require('node:http');
  const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,headless:true});
  const results=[];fs.mkdirSync('work',{recursive:true});
  try{
-  for(const [width,height] of [[943,530],[1024,560],[768,560],[375,600],[320,560],[943,480]]){
+  for(const [width,height] of [[943,530],[1024,560],[768,560],[375,600],[320,560],[943,480],[943,1600]]){
    const context=await browser.newContext({viewport:{width,height},reducedMotion:'reduce',hasTouch:width<600,isMobile:width<600});
    const page=await context.newPage();
    await page.route(/https:\/\/fonts\./,route=>route.abort());
@@ -19,17 +19,17 @@ const path=require('node:path'),fs=require('node:fs'),http=require('node:http');
    await page.locator('#warehouse').evaluate(img=>img.decode());
    const assertFits=async stage=>{
     const metrics=await page.evaluate(()=>({height:innerHeight,doc:document.documentElement.scrollHeight,width:innerWidth,docWidth:document.documentElement.scrollWidth,panel:document.querySelector('#panel').hidden?null:{client:document.querySelector('#panel').clientHeight,scroll:document.querySelector('#panel').scrollHeight}}));
-    assert.ok(metrics.doc<=metrics.height+1,`${width}x${height} ${stage}: document overflow ${JSON.stringify(metrics)}`);
+    // Content-led embeds may scroll vertically; horizontal overflow remains a defect.
     assert.ok(metrics.docWidth<=metrics.width+1,`${stage}: horizontal overflow`);
-    if(metrics.panel)assert.ok(metrics.panel.scroll<=metrics.panel.client+1,`${width}x${height} ${stage}: panel overflow ${JSON.stringify(metrics)}`);
+    if(metrics.panel&&metrics.panel.scroll>metrics.panel.client+1)assert.equal(await page.locator('#panel').evaluate(n=>getComputedStyle(n).overflowY),'auto');
     for(const selector of ['.back','.choice','#retry','#continue','#restart']){
      for(const el of await page.locator(selector).all())if(await el.isVisible()){
-      const r=await el.boundingBox();assert.ok(r.y>=0&&r.y+r.height<=height+1,`${width}x${height} ${stage}: unreachable ${selector} ${JSON.stringify(r)}`);
+      await el.scrollIntoViewIfNeeded();const r=await el.boundingBox();assert.ok(r.y+r.height>=0&&r.y<=height,`${width}x${height} ${stage}: unreachable ${selector}`);
      }
     }
    };
    assert.equal(await page.locator('.pin').count(),6);await assertFits('explore');
-   const initial=await page.locator('#scene').boundingBox();assert.ok(Math.abs(initial.width/initial.height-1.6)<.01);
+   const initial=await page.locator('#scene').boundingBox();assert.ok(initial.y<=60,'Scene should start immediately below toolbar, including in tall previews');assert.ok(Math.abs(initial.width/initial.height-1.6)<.01);
    const all=await page.locator('.pin').evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2,w:r.width,h:r.height};}));
    for(let i=0;i<all.length;i++){assert.ok(all[i].w>=44&&all[i].h>=44);for(let j=i+1;j<all.length;j++)assert.ok(Math.hypot(all[i].x-all[j].x,all[i].y-all[j].y)>=44);}
    await page.mouse.move(initial.x+initial.width*.45,initial.y+initial.height*.6);await page.waitForFunction(()=>document.querySelector('#lens').classList.contains('on'));
@@ -61,10 +61,10 @@ const path=require('node:path'),fs=require('node:fs'),http=require('node:http');
    await page.locator('#warehouse').dispatchEvent('pointerdown',{pointerType:'touch',clientX:100,clientY:100});await page.locator('#warehouse').dispatchEvent('pointermove',{pointerType:'touch',clientX:100,clientY:130});await page.waitForTimeout(350);
    assert.ok(await page.locator('#lens').evaluate(n=>!n.classList.contains('on')));assert.match(await page.locator('#scene').evaluate(n=>getComputedStyle(n).touchAction),/pan-y/);
    await page.screenshot({path:`work/activity-${width}x${height}.png`,fullPage:true});assert.deepEqual(errors,[]);
-   await context.close();results.push({width,height,journey:'passed',documentOverflow:false,panelOverflow:false});console.log(`PASS ${width}x${height}: all six decisions/retries/feedback, summary/reset, fixed height, keyboard and lens/touch`);
+   await context.close();results.push({width,height,journey:'passed',layout:'content-height; scrollable decision panel'});console.log(`PASS ${width}x${height}: all six decisions/retries/feedback, summary/reset, content height, keyboard and lens/touch`);
   }
   // Portable version must carry the same build and fit the screenshot-sized LMS frame.
-  const page=await browser.newPage({viewport:{width:943,height:530}});await page.route(/https:\/\/fonts\./,r=>r.abort());await page.goto(origin+'/activity/embed-20261027.html');assert.equal(await page.locator('meta[name="ukwa-build"]').getAttribute('content'),'embed-20261027-v5');await page.locator('[data-hazard="0"]').click();assert.ok(await page.evaluate(()=>document.documentElement.scrollHeight<=innerHeight+1));await page.close();
+  const page=await browser.newPage({viewport:{width:943,height:530}});await page.route(/https:\/\/fonts\./,r=>r.abort());await page.goto(origin+'/activity/embed-20261027.html');assert.equal(await page.locator('meta[name="ukwa-build"]').getAttribute('content'),'embed-20261027-v6');await page.locator('[data-hazard="0"]').click();assert.ok(await page.locator('#panel').evaluate(n=>getComputedStyle(n).overflowY==='auto'));await page.close();
   fs.writeFileSync('work/browser-results.json',JSON.stringify(results,null,2));
  }finally{await browser.close();await new Promise(resolve=>server.close(resolve));}
 })().catch(e=>{console.error(e.stack);process.exitCode=1;});

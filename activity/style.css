@@ -5,3 +5,15 @@
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 /* At very small embed heights or enlarged text, retain access instead of clipping content. */
 @media(max-height:479px){.activity{height:auto;min-height:560px;grid-template-rows:54px 478px 28px}}
+
+/* Embedded pages follow their content, rather than the preview viewport. */
+html,body{height:auto;min-height:0}
+.activity{height:auto;min-height:0;grid-template-rows:54px auto 28px}
+.workspace{min-height:0}
+.scene-frame{position:relative;inset:auto;display:block;width:100%;aspect-ratio:1.6}
+.scene{width:100%;height:auto;aspect-ratio:1.6}
+.workspace.inspecting{min-height:420px}
+.workspace.complete{min-height:240px}
+.panel{overflow-y:auto;overscroll-behavior:contain;grid-template-rows:44px auto}
+.panel-content{align-content:center}
+@media(max-width:599px){.workspace.inspecting{min-height:480px}.panel{grid-template-rows:40px auto}}

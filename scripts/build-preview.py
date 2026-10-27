@@ -13,4 +13,5 @@ html=(activity/'index.html').read_text().replace('<link rel="stylesheet" href="s
 # Regenerate the compatibility URL as well as the version-specific release.
 (activity/'embed-20261027.html').write_text(html)
 (activity/'embed-20261027-v7.html').write_text(html)
+(activity/'embed-20261027-v8.html').write_text(html)
 print('Generated preview.html from activity source')

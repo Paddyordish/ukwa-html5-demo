@@ -15,18 +15,19 @@ document.documentElement.style.setProperty('--scene-image', `url("${document.que
 let current=null;
 const reviewed=new Set();
 const markers=document.querySelector('#markers');
-markers.innerHTML=hazards.map((h,i)=>`<button type="button" class="pin" style="--x:${h.x}%;--y:${h.y}%" data-hazard="${i}" aria-label="Area ${i+1}: ${h.name}" aria-controls="panel" aria-expanded="false" aria-describedby="keyboard-help"><span>${i+1}</span></button>`).join('');
+markers.innerHTML=hazards.map((h,i)=>`<button type="button" class="pin" style="--x:${h.x}%;--y:${h.y}%" data-hazard="${i}" aria-label="Area ${i+1}: ${h.name}" aria-controls="panel" aria-expanded="false" aria-describedby="keyboard-help"></button>`).join('');
 const pins=[...markers.querySelectorAll('.pin')];
 function progress(){
  document.querySelector('#count').textContent=`${reviewed.size} of ${hazards.length} reviewed`;
  document.querySelector('#progress').value=reviewed.size;
- pins.forEach((p,i)=>{p.classList.toggle('reviewed',reviewed.has(i));p.querySelector('span').textContent=reviewed.has(i)?'✓':String(i+1);p.setAttribute('aria-label',`Area ${i+1}: ${hazards[i].name}${reviewed.has(i)?', reviewed':''}`);});
+ pins.forEach((p,i)=>{p.classList.toggle('reviewed',reviewed.has(i));p.setAttribute('aria-label',`Area ${i+1}: ${hazards[i].name}${reviewed.has(i)?', reviewed':''}`);});
  recap.hidden=reviewed.size!==hazards.length||current!==null;
  workspace.classList.toggle('complete',!recap.hidden);
+ document.querySelector('#find-one').disabled=reviewed.size===hazards.length;
  document.querySelector('#scene-frame').inert=current!==null;
 }
 function select(i){
- cancelTouch();hideLens();current=i;
+ clearHint();cancelTouch();hideLens();current=i;
  const h=hazards[i];
  pins.forEach((p,j)=>p.setAttribute('aria-expanded',String(i===j)));
  document.querySelector('#scene-frame').inert=true;
@@ -65,13 +66,23 @@ function answer(j){
  else showFeedback('Reconsider your response',h.retry,false);
  panel.querySelector('#feedback-title').focus({preventScroll:true});
 }
+let hintTimer=0;
+function clearHint(){clearTimeout(hintTimer);pins.forEach(p=>p.classList.remove('hint'));}
+document.querySelector('#find-one').onclick=()=>{
+ clearHint();const i=hazards.findIndex((_,i)=>!reviewed.has(i));
+ if(i<0)return;
+ pins[i].classList.add('hint');
+ document.querySelector('#hint-status').textContent=`Hint: ${hazards[i].name}. An inspection area is briefly outlined in the warehouse. Keyboard users can Tab to each inspection area.`;
+ hintTimer=setTimeout(clearHint,2600);
+};
 function reset(){
+ clearHint();document.querySelector('#hint-status').textContent='';
  if(current!==null)back();reviewed.clear();progress();hideLens();
  pins[0].focus({preventScroll:true});
 }
 document.querySelector('#restart').onclick=reset;
 pins.forEach((p,i)=>{
- p.onclick=e=>{if(e.detail>0&&suppressSceneClick)return;select(i);};
+ p.onclick=e=>{if(e.detail===0){select(i);return;}if(suppressSceneClick)return;const r=scene.getBoundingClientRect(),hit=hazardAt({x:e.clientX-r.left,y:e.clientY-r.top});if(hit!==null)select(hit);};
  p.onkeydown=e=>{
   const directions=['ArrowRight','ArrowDown','ArrowLeft','ArrowUp'];
   if(directions.includes(e.key)){e.preventDefault();pins[(i+(directions.indexOf(e.key)<2?1:pins.length-1))%pins.length].focus({preventScroll:true});}
@@ -105,6 +116,18 @@ function paint(point){
  // Keep the point under the pointer at the lens centre even when its circle is clamped.
  lens.style.backgroundPosition=`${radius-sx*zoom}px ${radius-sy*zoom}px`;
  const active=hazardAt({x:sx,y:sy});
+ const done=active!==null&&reviewed.has(active);
+ lens.classList.toggle('available',active!==null);lens.classList.toggle('reviewed',done);
+ const label=document.querySelector('#lens-label');
+ label.hidden=active===null;
+ if(active!==null){
+  label.textContent=done?'Reviewed — inspect again':'Inspect';
+  const w=label.offsetWidth,h=label.offsetHeight,gap=7;
+  const below=cy+radius+gap;
+  const top=below+h<=r.height?below:cy-radius-gap-h;
+  label.style.left=`${clamp(cx-w/2,4,r.width-w-4)}px`;
+  label.style.top=`${Math.max(2,top)}px`;
+ }
  pins.forEach((p,i)=>p.classList.toggle('near',i===active));
 }
 function moveLens(clientX,clientY){
@@ -113,7 +136,7 @@ function moveLens(clientX,clientY){
  lens.classList.add('on');
  paint({x:clientX-r.left,y:clientY-r.top});
 }
-function hideLens(){lens.classList.remove('on');pins.forEach(p=>p.classList.remove('near'));}
+function hideLens(){lens.classList.remove('on','available','reviewed');document.querySelector('#lens-label').hidden=true;pins.forEach(p=>p.classList.remove('near'));}
 function inspectMarker(i){const r=scene.getBoundingClientRect();moveLens(r.left+r.width*hazards[i].x/100,r.top+r.height*hazards[i].y/100);}
 scene.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')moveLens(e.clientX,e.clientY);});
 scene.addEventListener('pointermove',e=>{
@@ -126,7 +149,7 @@ let touchTimer=0,touchStart=null,suppressSceneClick=false;
 function cancelTouch(){clearTimeout(touchTimer);touchTimer=0;touchStart=null;hideLens();}
 scene.addEventListener('pointerdown',e=>{
  suppressSceneClick=false;
- if(e.pointerType!=='touch'||e.target.closest('.pin')||current!==null)return;
+ if(e.pointerType!=='touch'||current!==null)return;
  cancelTouch();touchStart={x:e.clientX,y:e.clientY};
  touchTimer=setTimeout(()=>{if(touchStart)moveLens(touchStart.x,touchStart.y);},320);
 });

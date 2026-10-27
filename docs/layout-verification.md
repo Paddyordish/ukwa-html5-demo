@@ -1,3 +1,13 @@
+# Magnifier-led discovery (v8)
+
+Built on latest main `02dfe90` (merged PR #6); no open PRs were present. Permanent marker artwork is removed. Invisible buttons retain the existing hazard anchors; the same nearest-centre 26px resolver handles pointer highlights and clicks, including overlaps at narrow widths. Keyboard focus alone outlines its 44px button. Touch holds now also work directly over those invisible buttons.
+
+A 44px footer accommodates the optional hint control, and the scene fits the remaining fixed workspace before the journey begins. Dialog, feedback, recap and restart do not resize it. The lens rim and outside label provide discovery and reviewed states; hint outlines expire after 2.6 seconds even with reduced motion. The portable source, compatibility files, v8 file and hub are regenerated together.
+
+The verification commands are `npm run test:static`, `npm run test:browser`, `npm run test:discovery` and `npm run test:iframe`. Chromium checks cover six journeys and responsive bounds, 320px nearest-region overlap arbitration, hints, rim/label states, invisible targets, keyboard and touch. Real Nucleus, physical devices, Safari/Firefox, screen readers and production font loading remain unverified.
+
+The following is the retained v7 root-cause and measurement record; its numeric rectangles describe that earlier toolbar/footer layout.
+
 # Stationary scene and compact dialogs
 
 The change starts from main commit `1f7ee3abbf13c89c05671ecebf987964e4413671`. Main and open PRs were rechecked after the popup request; no open PRs contained another implementation to preserve.

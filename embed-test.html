@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UKWA — Embed compatibility test</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#10273c;color:#fff;font:17px/1.55 system-ui,sans-serif}
+main{max-width:850px;margin:auto;padding:clamp(20px,5vw,48px)}
+.eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;color:#c5d8e7}
+h1{font-size:clamp(2rem,6vw,3rem);line-height:1.1;margin:.5em 0}p{max-width:65ch}
+.card{background:#fff;color:#10273c;border-radius:16px;padding:24px;margin:24px 0}
+button{font:inherit;font-weight:650;padding:12px 18px;border:2px solid transparent;border-radius:8px;cursor:pointer;background:#b10023;color:#fff;min-height:48px;margin:4px 8px 4px 0}
+button:focus-visible{outline:3px solid #ffe18a;outline-offset:4px}
+.card button:focus-visible{outline-color:#10273c}
+button:disabled{background:#536373;cursor:default}
+.secondary{background:transparent;border-color:currentColor}
+progress{width:100%;height:18px;accent-color:#b10023}
+code{overflow-wrap:anywhere}small{display:block}#feedback{min-height:3em}
+@media(prefers-reduced-motion:no-preference){progress{transition:opacity .2s}}
+</style>
+</head>
+<body><main>
+<p class="eyebrow">UKWA / Nucleus · Technical test v1</p>
+<h1>Can this activity run inside the course?</h1>
+<p>This checks the embed before the warehouse activity is built. The counter below belongs to this page. It does not report completion to Nucleus.</p>
+<noscript><p>JavaScript is unavailable. The interaction cannot run in this environment.</p></noscript>
+<div class="card">
+<h2>Two-step interaction</h2>
+<p id="status" role="status" aria-live="polite">Not started — 0 of 2 steps.</p>
+<progress id="progress" value="0" max="2" aria-label="Test steps completed"></progress>
+<p id="feedback">Select Step 1 to begin.</p>
+<button id="step1" type="button" disabled>Step 1: start</button>
+<button id="step2" type="button" disabled>Step 2: finish</button>
+</div>
+<button id="reset" class="secondary" type="button" disabled>Reset test</button>
+<p><small id="environment">JavaScript has not started.</small></p>
+<p><small>Memory only: reloading starts this test again. This version deliberately does not use browser storage or an LMS API. Use the native course controls to move between pages.</small></p>
+</main>
+<script>
+'use strict';
+let stage = 0;
+const status = document.getElementById('status');
+const progress = document.getElementById('progress');
+const feedback = document.getElementById('feedback');
+const step1 = document.getElementById('step1');
+const step2 = document.getElementById('step2');
+const reset = document.getElementById('reset');
+function render() {
+  progress.value = stage;
+  status.textContent = ['Not started — 0 of 2 steps.', 'In progress — 1 of 2 steps.', 'Activity finished — 2 of 2 steps. Nucleus completion is unconfirmed.'][stage];
+  feedback.textContent = ['Select Step 1 to begin.', 'The first click worked. Select Step 2 to finish.', 'Both clicks worked. Check the native course progress separately.'][stage];
+  step1.disabled = stage !== 0;
+  step2.disabled = stage !== 1;
+}
+step1.addEventListener('click', () => { stage = 1; render(); step2.focus(); });
+step2.addEventListener('click', () => { stage = 2; render(); reset.focus(); });
+reset.addEventListener('click', () => { stage = 0; render(); step1.focus(); });
+document.getElementById('environment').textContent = 'JavaScript running · ' + (window.self === window.top ? 'Standalone page' : 'Embedded frame') + ' · loaded ' + new Date().toLocaleTimeString();
+reset.disabled = false;
+render();
+</script>
+</body>
+</html>

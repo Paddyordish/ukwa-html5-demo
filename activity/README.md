@@ -1,47 +1,53 @@
-# UKWA viewport-fit warehouse activity
+# UKWA stationary-scene activity
 
-This practice block is sized by the LMS iframe, not by its content length. The surrounding introduction, objectives and assessed check stay in native Nucleus V2 blocks. It builds on the merged official branding, six-hazard scene and automatic lens.
+A lean practice block for native Nucleus course content. The official UKWA logo, colours, Raleway, six hazards and inherited feedback are preserved. No source archives or learning sections are added.
 
-## LMS URL and sizing
+## Embed contract
 
-After merging this change and confirming GitHub Pages deployment succeeds, paste this **new filename** into the LMS URL field:
+After merge and a successful Pages publication, use:
 
-https://paddyordish.github.io/ukwa-html5-demo/activity/embed-20261027.html
+https://paddyordish.github.io/ukwa-html5-demo/activity/embed-20261027-v7.html
 
-Set the embed height to **560px** if Nucleus exposes a height setting. The activity uses the iframe's viewport height, with a compact toolbar and footer hint. The supplied screenshot's 943 × 530px size is also covered by the browser checks. No change to the LMS itself or undocumented host resizing is required.
+Set the iframe to **100% width, 560px height, border 0, display block**, with at least 320px available width. Keep its height fixed rather than using a width-derived aspect ratio. The root README and hub include the exact code. The source entry and compatibility embed are regenerated too; the new release filename avoids stale split HTML/CSS/JS caches.
 
-The six-hazard scene, question, retry feedback, correct feedback and summary share the same workspace. A selected hazard replaces the exploration view, and feedback replaces the answer choices. Nothing is appended below the block. The panel does not have a nested scrollbar and the script does not scroll the page. At very short iframe heights below 480px the document deliberately allows overflow instead of clipping controls; use the recommended height. Browser text enlargement and assistive-technology needs may similarly require extra space.
+The activity fills the available iframe height up to 560px, with compact toolbar/footer tracks and one definite workspace. Tall standalone windows cap the component at 560px, rather than adding space before the scene. The warehouse sits at the top of the workspace and scales uniformly to fit its width and height. No question or feedback participates in sizing that workspace.
 
-The scene is fitted inside the available rectangle without cropping. Marker coordinates are applied to the actual image rectangle, including any surrounding blank space. Official logo proportions and bytes are preserved. Raleway uses the existing Google Fonts request with system fallbacks.
+The Nucleus page can scroll normally to reach content before or after this fixed block. That moves the whole iframe in the parent page, which is expected. The activity itself must have no horizontal/vertical document scrolling in the normal supported journey. No parent messaging, auto-height manipulation or root overflow-hiding is used.
 
-## Publication and old versions
+## Exploration and magnification
 
-The old URL `/activity/` loads `activity/index.html` from the last successful **main** deployment, not from an unmerged branch. PR #3 was merged while this sizing fix was being developed; its Pages deployment succeeded. The screenshot supplied by the user showed the earlier three-hazard release.
+The picture and marker coordinates share an 8:5 scene rectangle. CSS container units fit that rectangle without reacting to question/feedback content; a ResizeObserver fitting fallback exists only for browsers without container-unit support. No transforms or scrolling move the underlying image. Generous 44px native buttons contain 18px visible markers.
 
-The version-specific embed is a portable single file with the logo, scene, script and styles embedded. Using a new filename avoids stale HTML and independently cached older CSS/JS. Its hidden build metadata is `embed-20261027-v5`. It is identical to `preview.html`. Neither a cache parameter nor the preview Page publishes an unmerged commit to GitHub Pages.
+Mouse/pen entry shows the lens automatically. Its centre follows the pointer directly, without an upward offset or trailing interpolation. The circle clamps inside the image at its edges; its background position separately samples the point under the pointer at the lens centre. The sample uses the border box and 3× scaling. It has `pointer-events: none`, so hotspot and nearby-area clicks pass through.
 
-`python3 scripts/build-preview.py` generates both portable files from `activity/index.html`, `style.css`, `app.js`, the SVG and exact official PNG. Edit source files, not generated copies. The version file is a new release filename; choose another for a future distinct release.
+Only the inspection point selects an area. The nearest hazard within a 26px CSS-pixel radius highlights and can be activated from the scene. A hazard merely visible elsewhere inside the glass is not selected. Clicking empty space does nothing. Every numbered marker is directly clickable and has its own keyboard label.
 
-## Interaction and access
+Touch users can tap a marker or nearby activation area, or hold the picture still for 320ms to magnify. Moving more than 10px cancels the hold and suppresses an accidental scene click. Release, cancellation, resize and window blur hide the lens. Native vertical panning and pinch zoom remain available; horizontal panning is not enabled and the picture is not draggable.
 
-Six visible 18px markers retain 44px targets. Tab reaches each; arrow keys wrap; Home/End reach first/last. Enter/Space opens a decision. Escape and Return restore exploration and marker focus; after the final hazard, focus moves to the compact summary. There is no focus trap. Revisited correct responses retain feedback and never add progress twice.
+## Questions, feedback and completion
 
-Mouse/pen entry shows the 3× vector lens automatically; it follows smoothly, disappears on exit and stays hidden during decisions. Reduced-motion mode updates the lens immediately. It never intercepts clicks.
+A native modal `dialog` appears centred over the workspace; its backdrop dims the still-visible warehouse. Each popup has a framed SVG close-up, hazard name/description, question and choices, retry/correct feedback, and a visible × Close button. Feedback replaces choices; it is not appended below the activity. Continue closes the popup. Empty backdrop clicks do not select another hazard.
 
-Touch inspection is a 320ms still hold. Movement beyond 10px, release or pointer cancellation cancels it; no pointer capture or movement prevention interferes with native scrolling/pinch. Tapping a marker opens its close-up directly. Physical finger gestures remain a device check.
+The dialog has an accessible name/description, receives heading focus, wraps Tab/Shift+Tab at its controls, closes with Escape and returns focus to the selected marker. The rest of the iframe is inert while it is open; no surrounding course document is made inert. The magnifier stays hidden throughout the popup. The asynchronous native close event is guarded so a queued event cannot close a newly reopened dialog.
 
-## Tracking and source boundaries
+Tab, Enter/Space, wrapped arrow keys and Home/End retain marker access. All focus moves use preventScroll. A compact completion card and restart remain within the unchanged workspace; the scene remains visible and reviewable. Each correct decision counts once.
 
-Progress exists only in this document's memory. Reload resets it. There are no Nucleus, SCORM, xAPI, storage or completion API calls, and no durable resume or course-completion reporting. Keep assessed tracking in supported native blocks. These technical limits are not displayed to learners.
+At enlarged text or unusually small frames, the **popup itself** can scroll vertically to retain every control, rather than clipping text or shrinking it excessively. Normal supported frames are checked for no popup overflow. The source document and surrounding course are not forcibly locked with overflow-hidden styles. Reduced motion removes marker transitions; pointer tracking has no animated lag.
 
-Responses and SVG artwork are inherited from the existing six-hazard prototype. The original SCORM and improved source ZIP remain unavailable in this execution session. Review learning copy against course content/site procedures before production use. See `../docs/branding.md` for the authoritative supplied identity.
+## Build, tracking and boundaries
 
-## Verification
+Run `python3 scripts/build-preview.py` after changing source, logo or scene. It creates all three identical portable files: `preview.html`, `embed-20261027.html`, and `embed-20261027-v7.html`. Build metadata is `embed-20261027-v7`. The supplied logo bytes and original embed test remain unchanged. Raleway retains the existing Google Fonts request with system fallbacks.
 
-Run `python3 tests/check-assets.py` for SVG XML, independent feature-anchor checks, non-overlapping 44px targets, exact official logo/original embed-test Git hashes, build metadata and byte-identical portable outputs.
+Activity progress is in-memory practice only. Reload resets it. There are no Nucleus, SCORM, xAPI, storage, course-completion or durable-resume API calls. Tracking limitations belong in these developer notes, not in learner-facing copy. Use native assessment/tracking blocks for supported recorded course progress.
 
-Run `npm install`, `npx playwright install chromium`, then `npm run test:browser`. Use `CHROMIUM_PATH` for an installed browser. The test serves local files from a temporary localhost server in an isolated browser profile. It exercises every hazard's choices, retry and correct feedback; completion/restart; keyboard/focus; lens and synthetic touch cancellation. The complete journey passed in Chromium at 943×530, 1024×560, 768×560, 375×600, 320×560 and 943×480. Every choices/retry/correct/summary state had no document or panel overflow and all controls stayed inside the frame. Desktop and mobile screenshots were visually inspected; screenshots and measurements are saved in ignored `work/`.
+The original SCORM and improved asset ZIP remain unavailable in this execution session. Six-hazard learning copy and artwork are inherited from the reviewed repository work. Review feedback against course content and site procedures before production use. See `../docs/branding.md` for the official identity baseline.
 
-The earlier file-URL launch restriction was resolved by using localhost serving and the permitted isolated browser execution. Real Nucleus authoring/learner views, actual finger scrolling/pinch, screen-reader use and the production Google Fonts request still need checks in the target environment. The browser tests intercept font requests so fallback text layout is deterministic.
+## Checks
 
-`npm run test:iframe` also passed in a 943×530 iframe with neighbouring native-style controls: all six decisions and completion retained the outer page height and following control position, no iframe document overflow occurred, and Tab exited to the following control. This is a local iframe harness, not a claim of testing inside the real Nucleus application.
+- `python3 tests/check-assets.py`: independent feature anchors/marker spacing, SVG XML, original logo/embed-test hashes, release metadata, hub links and reproducible portable files.
+- `npm run test:browser`: source/portable browser journeys, unchanged scene/image/marker bounds, zero normal document/popup overflow, centred/edge-clamped sampling, nearby and empty clicks, native dialog focus/close, retries, feedback, progress and restart; enlarged-text/small-height popup fallback.
+- `npm run test:iframe`: local native-neighbour harness, modal focus containment, keyboard exit after closing, browser-generated touch gestures, parent scrolling versus iframe scrolling.
+
+Install Playwright/Chromium for these commands, or set CHROMIUM_PATH to an installed browser. Browser checks use isolated profiles and a local server. Production font requests are intercepted for deterministic fallback typography. Screenshots/results go to ignored `work/`.
+
+See `../docs/layout-verification.md` for measured before/after evidence and outstanding real Nucleus/device checks.

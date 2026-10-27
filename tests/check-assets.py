@@ -17,15 +17,18 @@ logo=(root/'assets/brand/ukwa-logo.png').read_bytes()
 assert hashlib.sha1(b'blob '+str(len(logo)).encode()+b'\0'+logo).hexdigest()=='d9195453483e2b41c08b96077068560ccdca0571'
 embed=(root/'embed-test.html').read_bytes()
 assert hashlib.sha1(b'blob '+str(len(embed)).encode()+b'\0'+embed).hexdigest()=='0e1d58d41ea3b2c88f1e1240f54555994aef3d13'
-assert (root/'activity/embed-20261027.html').read_bytes()==(root/'preview.html').read_bytes()
+for portable in ['activity/embed-20261027.html','activity/embed-20261027-v7.html']:
+ assert (root/portable).read_bytes()==(root/'preview.html').read_bytes()
 before=(root/'preview.html').read_bytes();subprocess.run(['python3',str(root/'scripts/build-preview.py')],check=True);assert before==(root/'preview.html').read_bytes()
 html=(root/'activity/index.html').read_text();preview=(root/'preview.html').read_text()
 for text in ['Look closer.','Act safer.','What could','Nucleus','FIELD PRACTICE']:assert text not in html
 assert 'glass' not in html and 'magnify.onclick' not in source
 assert 'touch-action:pan-y pinch-zoom' in (root/'activity/style.css').read_text()
 assert 'scrollIntoView' not in source
-assert 'overflow:auto' not in (root/'activity/style.css').read_text()
-assert '100svh' in (root/'activity/style.css').read_text()
-assert 'embed-20261027-v5' in html
+assert 'embed-20261027-v7' in html
+assert '<dialog ' in html
+hub=(root/'index.html').read_text()
+assert 'embed-20261027-v7.html' in hub and 'height="560"' in hub
+assert 'height="850"' not in hub
 assert base64.b64encode(logo).decode() in preview
 print('PASS SVG, six feature/marker alignments, non-overlapping 44px targets at 320–1440px, exact logo/embed bytes, reproducible preview and embed boundaries')

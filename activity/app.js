@@ -14,7 +14,6 @@ const workspace=document.querySelector('#workspace'), recap=document.querySelect
 document.documentElement.style.setProperty('--scene-image', `url("${document.querySelector('#warehouse').src}")`);
 let current=null;
 const reviewed=new Set();
-const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const markers=document.querySelector('#markers');
 markers.innerHTML=hazards.map((h,i)=>`<button type="button" class="pin" style="--x:${h.x}%;--y:${h.y}%" data-hazard="${i}" aria-label="Area ${i+1}: ${h.name}" aria-controls="panel" aria-expanded="false" aria-describedby="keyboard-help"><span>${i+1}</span></button>`).join('');
 const pins=[...markers.querySelectorAll('.pin')];
@@ -24,31 +23,35 @@ function progress(){
  pins.forEach((p,i)=>{p.classList.toggle('reviewed',reviewed.has(i));p.querySelector('span').textContent=reviewed.has(i)?'✓':String(i+1);p.setAttribute('aria-label',`Area ${i+1}: ${hazards[i].name}${reviewed.has(i)?', reviewed':''}`);});
  recap.hidden=reviewed.size!==hazards.length||current!==null;
  workspace.classList.toggle('complete',!recap.hidden);
+ document.querySelector('#scene-frame').inert=current!==null;
 }
 function select(i){
  cancelTouch();hideLens();current=i;
  const h=hazards[i];
  pins.forEach((p,j)=>p.setAttribute('aria-expanded',String(i===j)));
+ document.querySelector('#scene-frame').inert=true;
  panel.hidden=false;recap.hidden=true;workspace.classList.remove('complete');workspace.classList.add('inspecting');
- panel.innerHTML=`<div class="panel-top"><button class="back" type="button">← Return to scene</button><span class="eyebrow">Area ${i+1} of ${hazards.length}${reviewed.has(i)?' · Reviewed':''}</span></div><div class="panel-content"><div class="hazard-summary"><div class="inspection"><svg viewBox="${crops[i].join(' ')}" role="img" aria-label="Close-up: ${h.name}" preserveAspectRatio="xMidYMid meet"><image href="${document.querySelector('#warehouse').src}" width="1440" height="900"/></svg></div><h2 id="panel-title" tabindex="-1">${h.name}</h2><p class="description">${h.detail}</p></div><div class="decision"><h3 id="response-question">${h.question}</h3><div class="choices">${h.choices.map((c,j)=>`<button class="choice" type="button" data-answer="${j}"><span aria-hidden="true">${String.fromCharCode(65+j)}</span>${c}</button>`).join('')}</div><div id="feedback" role="status" aria-live="polite" hidden></div></div></div>`;
+ panel.innerHTML=`<div class="panel-top"><button class="back" type="button" aria-label="Close hazard dialog">× Close</button><span class="eyebrow">Area ${i+1} of ${hazards.length}${reviewed.has(i)?' · Reviewed':''}</span></div><div class="panel-content"><div class="hazard-summary"><div class="inspection"><svg viewBox="${crops[i].join(' ')}" role="img" aria-label="Close-up: ${h.name}" preserveAspectRatio="xMidYMid meet"><image href="${document.querySelector('#warehouse').src}" width="1440" height="900"/></svg></div><h2 id="panel-title" tabindex="-1">${h.name}</h2><p class="description" id="hazard-description">${h.detail}</p></div><div class="decision"><h3 id="response-question">${h.question}</h3><div class="choices">${h.choices.map((c,j)=>`<button class="choice" type="button" data-answer="${j}"><span class="choice-letter" aria-hidden="true">${String.fromCharCode(65+j)}</span><span class="choice-label">${c}</span></button>`).join('')}</div><div id="feedback" role="status" aria-live="polite" hidden></div></div></div>`;
  panel.querySelector('.back').onclick=back;
  panel.querySelectorAll('.choice').forEach(b=>b.onclick=()=>answer(Number(b.dataset.answer)));
  if(reviewed.has(i))showCorrect(h);
+ panel.showModal();
  panel.querySelector('h2').focus({preventScroll:true});
 }
 function back(){
  if(current===null)return;
- const last=current;current=null;panel.hidden=true;workspace.classList.remove('inspecting');
+ const last=current;current=null;
+ document.querySelector('#scene-frame').inert=false;
+ if(panel.open)panel.close();panel.hidden=true;workspace.classList.remove('inspecting');
  pins.forEach(p=>p.setAttribute('aria-expanded','false'));
  progress();
- if(reviewed.size===hazards.length)recap.querySelector('h2').focus({preventScroll:true});
- else pins[last].focus({preventScroll:true});
+ pins[last].focus({preventScroll:true});
 }
 function showFeedback(title,message,correct){
  panel.querySelector('.choices').hidden=true;
  panel.querySelector('#response-question').hidden=true;
  const feedback=panel.querySelector('#feedback');feedback.hidden=false;
- feedback.innerHTML=`<div class="feedback ${correct?'':'retry'}"><h3 tabindex="-1" id="feedback-title">${title}</h3><p>${message}</p><button type="button" class="primary" id="${correct?'continue':'retry'}">${correct?'Return to scene →':'Choose again →'}</button></div>`;
+ feedback.innerHTML=`<div class="feedback ${correct?'':'retry'}"><h3 tabindex="-1" id="feedback-title">${title}</h3><p>${message}</p><button type="button" class="primary" id="${correct?'continue':'retry'}">${correct?'Continue →':'Choose again →'}</button></div>`;
  panel.querySelector(correct?'#continue':'#retry').onclick=correct?back:()=>{
   feedback.hidden=true;panel.querySelector('.choices').hidden=false;panel.querySelector('#response-question').hidden=false;
   panel.querySelector('.choice').focus({preventScroll:true});
@@ -68,7 +71,7 @@ function reset(){
 }
 document.querySelector('#restart').onclick=reset;
 pins.forEach((p,i)=>{
- p.onclick=()=>select(i);
+ p.onclick=e=>{if(e.detail>0&&suppressSceneClick)return;select(i);};
  p.onkeydown=e=>{
   const directions=['ArrowRight','ArrowDown','ArrowLeft','ArrowUp'];
   if(directions.includes(e.key)){e.preventDefault();pins[(i+(directions.indexOf(e.key)<2?1:pins.length-1))%pins.length].focus({preventScroll:true});}
@@ -76,67 +79,81 @@ pins.forEach((p,i)=>{
  };
  p.addEventListener('focus',()=>{if(current===null)inspectMarker(i);});
 });
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){cancelTouch();hideLens();back();}});
-// Keep the vector sample and lens position in the same frame, including at scene edges.
-let target=null,position=null,frame=0;
+// Keep Tab in the popup even at native-dialog/browser-chrome focus boundaries.
+panel.addEventListener('keydown',e=>{
+ if(e.key!=='Tab')return;
+ const controls=[...panel.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex="0"]')].filter(el=>el.getClientRects().length);
+ const first=controls[0],last=controls[controls.length-1];
+ if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus({preventScroll:true});}
+ else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus({preventScroll:true});}
+});
+panel.addEventListener('cancel',e=>{e.preventDefault();back();});
+panel.addEventListener('close',()=>{if(!panel.open&&current!==null)back();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.open){cancelTouch();hideLens();}});
+// Geometry is local to the stationary image. Only the glass and its background move.
 function paint(point){
- const r=scene.getBoundingClientRect(),radius=lens.offsetWidth/2;
+ const r=scene.getBoundingClientRect();
+ const preferred=Math.max(120,Math.min(180,document.querySelector('#scene-frame').clientWidth*.22));
+ lens.style.inlineSize=`${Math.min(preferred,r.width*.95,r.height*.95)}px`;
+ const radius=lens.getBoundingClientRect().width/2;
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
  const sx=clamp(point.x,0,r.width),sy=clamp(point.y,0,r.height);
- const cx=clamp(sx,radius+5,r.width-radius-5);
- const cy=clamp(sy-radius-30,radius+5,r.height-radius-5);
+ const cx=clamp(sx,radius,r.width-radius),cy=clamp(sy,radius,r.height-radius);
  lens.style.left=`${cx}px`;lens.style.top=`${cy}px`;
  const zoom=3;
  lens.style.backgroundSize=`${r.width*zoom}px ${r.height*zoom}px`;
+ // Keep the point under the pointer at the lens centre even when its circle is clamped.
  lens.style.backgroundPosition=`${radius-sx*zoom}px ${radius-sy*zoom}px`;
- pins.forEach((p,i)=>p.classList.toggle('near',Math.hypot(sx-r.width*hazards[i].x/100,sy-r.height*hazards[i].y/100)<Math.max(55,r.width*.07)));
+ const active=hazardAt({x:sx,y:sy});
+ pins.forEach((p,i)=>p.classList.toggle('near',i===active));
 }
-function animateLens(){
- frame=0;if(!target)return;
- const dx=target.x-position.x,dy=target.y-position.y;
- if(reduced.matches||Math.hypot(dx,dy)<.2){position={...target};paint(position);return;}
- position.x+=dx*.35;position.y+=dy*.35;paint(position);frame=requestAnimationFrame(animateLens);
-}
-function moveLens(clientX,clientY,immediate=false){
+function moveLens(clientX,clientY){
  if(current!==null)return;
- const r=scene.getBoundingClientRect();target={x:clientX-r.left,y:clientY-r.top};
+ const r=scene.getBoundingClientRect();
  lens.classList.add('on');
- if(!position||immediate||reduced.matches){position={...target};paint(position);}
- if(!frame)frame=requestAnimationFrame(animateLens);
+ paint({x:clientX-r.left,y:clientY-r.top});
 }
-function hideLens(){
- lens.classList.remove('on');target=null;position=null;
- if(frame)cancelAnimationFrame(frame);frame=0;pins.forEach(p=>p.classList.remove('near'));
-}
-function inspectMarker(i){const r=scene.getBoundingClientRect();moveLens(r.left+r.width*hazards[i].x/100,r.top+r.height*hazards[i].y/100,true);}
-scene.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')moveLens(e.clientX,e.clientY,true);});
+function hideLens(){lens.classList.remove('on');pins.forEach(p=>p.classList.remove('near'));}
+function inspectMarker(i){const r=scene.getBoundingClientRect();moveLens(r.left+r.width*hazards[i].x/100,r.top+r.height*hazards[i].y/100);}
+scene.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')moveLens(e.clientX,e.clientY);});
 scene.addEventListener('pointermove',e=>{
  if(e.pointerType!=='touch'){moveLens(e.clientX,e.clientY);return;}
- if(touchStart&&Math.hypot(e.clientX-touchStart.x,e.clientY-touchStart.y)>10)cancelTouch();
+ if(touchStart&&Math.hypot(e.clientX-touchStart.x,e.clientY-touchStart.y)>10){suppressSceneClick=true;cancelTouch();}
 });
 scene.addEventListener('pointerleave',()=>{cancelTouch();hideLens();});
 // A still hold inspects. Any movement cancels; never prevent the browser's scroll/pinch gesture.
-let touchTimer=0,touchStart=null;
+let touchTimer=0,touchStart=null,suppressSceneClick=false;
 function cancelTouch(){clearTimeout(touchTimer);touchTimer=0;touchStart=null;hideLens();}
 scene.addEventListener('pointerdown',e=>{
+ suppressSceneClick=false;
  if(e.pointerType!=='touch'||e.target.closest('.pin')||current!==null)return;
  cancelTouch();touchStart={x:e.clientX,y:e.clientY};
- touchTimer=setTimeout(()=>{if(touchStart)moveLens(touchStart.x,touchStart.y,true);},320);
+ touchTimer=setTimeout(()=>{if(touchStart)moveLens(touchStart.x,touchStart.y);},320);
 });
 scene.addEventListener('pointerup',e=>{if(e.pointerType==='touch')cancelTouch();});
-scene.addEventListener('pointercancel',cancelTouch);
+scene.addEventListener('pointercancel',()=>{suppressSceneClick=true;cancelTouch();});
 scene.addEventListener('contextmenu',e=>{if(touchStart)e.preventDefault();});
 scene.addEventListener('focusout',e=>{if(!scene.contains(e.relatedTarget))hideLens();});
 window.addEventListener('resize',()=>{cancelTouch();hideLens();});
 window.addEventListener('blur',cancelTouch);
-progress();
-
-function fitScene(){
- const box=document.querySelector('#scene-frame').getBoundingClientRect();
- const width=Math.min(box.width,box.height*1.6);
- scene.style.width=`${width}px`;scene.style.height=`${width/1.6}px`;
- hideLens();
+// Only the inspection point selects an area; seeing a hazard elsewhere in the lens does not.
+function hazardAt(point){
+ const r=scene.getBoundingClientRect();let nearest=null,best=26*26;
+ hazards.forEach((h,i)=>{const distance=(point.x-r.width*h.x/100)**2+(point.y-r.height*h.y/100)**2;if(distance<best){best=distance;nearest=i;}});
+ return nearest;
 }
-if(typeof ResizeObserver!=='undefined')new ResizeObserver(fitScene).observe(document.querySelector('#scene-frame'));
-window.addEventListener('resize',fitScene);
-fitScene();
+scene.addEventListener('click',e=>{
+ if(e.target.closest('.pin'))return;
+ if(suppressSceneClick){suppressSceneClick=false;return;}
+ if(current!==null)return;
+ const r=scene.getBoundingClientRect(),i=hazardAt({x:e.clientX-r.left,y:e.clientY-r.top});
+ if(i!==null)select(i);
+});
+// Container units keep the image proportionate without JS updates during activity states.
+if(!CSS.supports('width','1cqw')){
+ const frame=document.querySelector('#scene-frame');
+ const fit=()=>{const box=frame.getBoundingClientRect(),width=Math.min(box.width,box.height*1.6);scene.style.width=`${width}px`;scene.style.height=`${width/1.6}px`;};
+ if(typeof ResizeObserver!=='undefined')new ResizeObserver(fit).observe(frame);
+ window.addEventListener('resize',fit);fit();
+}
+progress();

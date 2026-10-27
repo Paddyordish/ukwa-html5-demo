@@ -1,0 +1,10 @@
+const {chromium}=require('playwright');
+const fs=require('node:fs'),path=require('node:path'),http=require('node:http');
+async function start(){
+ const server=http.createServer((req,res)=>{const requested=decodeURIComponent(new URL(req.url,'http://local').pathname);const file=path.resolve('.'+(requested.endsWith('/')?requested+'index.html':requested));if(!file.startsWith(process.cwd()+path.sep)){res.writeHead(403).end();return;}try{const type=file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':file.endsWith('.svg')?'image/svg+xml':file.endsWith('.png')?'image/png':'text/html';res.writeHead(200,{'Content-Type':type});res.end(fs.readFileSync(file));}catch{res.writeHead(404).end();}});
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+ const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,headless:true});
+ return {browser,origin:`http://127.0.0.1:${server.address().port}`,close:async()=>{await browser.close();await new Promise(resolve=>server.close(resolve));}};
+}
+async function snapshot(page){return page.evaluate(()=>{const rect=n=>{const r=n.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};};return {scene:rect(document.querySelector('#scene')),image:rect(document.querySelector('#warehouse')),markers:[...document.querySelectorAll('.pin')].map(rect),scroll:{x:scrollX,y:scrollY},clientWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,scrollHeight:document.documentElement.scrollHeight,viewport:{width:innerWidth,height:innerHeight}};});}
+module.exports={start,snapshot};

@@ -1,21 +1,26 @@
-# UKWA warehouse safety practice
+# UKWA warehouse hazard practice
 
-The LMS embeds a hosted HTML page. It does not read the pull-request branch automatically.
+Release **embed-20261027-v7** keeps the warehouse stationary beneath compact question dialogs. The magnifier follows the inspection point; six practice decisions, retry feedback, progress and restart stay inside the activity.
 
-Viewport-fit build: `activity/embed-20261027.html` (build marker `embed-20261027-v5`). After this PR is merged and GitHub Pages deployment succeeds, use:
+After this PR is merged and GitHub Pages deployment succeeds, use the version-specific URL:
 
-https://paddyordish.github.io/ukwa-html5-demo/activity/embed-20261027.html
-
-This filename is new, so it cannot serve the cached three-hazard document. Do not use the GitHub source/blob URL in an iframe. Until deployment, the new public URL is unavailable; the review preview in the PR is a separate ChatGPT Page, not an LMS hosting URL.
-
-For a URL-only block, paste the URL above and set its height to **560px** if configurable. The activity fills the iframe viewport. The browser test also covers 943 × 530px, matching the supplied authoring screenshot. Native Nucleus blocks provide the introduction, objectives and assessment.
+https://paddyordish.github.io/ukwa-html5-demo/activity/embed-20261027-v7.html
 
 ```html
 <iframe
-  src="https://paddyordish.github.io/ukwa-html5-demo/activity/embed-20261027.html"
+  src="https://paddyordish.github.io/ukwa-html5-demo/activity/embed-20261027-v7.html"
   title="UKWA warehouse hazard practice"
+  width="100%"
+  height="560"
   style="display:block;width:100%;height:560px;border:0"
+  loading="lazy"
 ></iframe>
 ```
 
-`activity/index.html`, the version-specific embed and `preview.html` are built from the same source. Developer notes, tracking limits and checks are in [activity/README.md](activity/README.md). `embed-test.html` is preserved as the original technical test.
+Use **560px height** and **100% width**, with at least **320px** available width. Do not replace the fixed height with an iframe aspect ratio: mobile decisions need readable vertical space. Native Nucleus blocks supply the introduction and assessment.
+
+The root [interaction hub](index.html) copies this same URL and iframe code and shows the build and GitHub publication status. Unmerged work is not automatically available at the public URL. The PR's review Page is separate from the public LMS embed.
+
+`activity/index.html` is the source entry point. `python3 scripts/build-preview.py` regenerates `preview.html`, the compatibility `activity/embed-20261027.html`, and `activity/embed-20261027-v7.html` from the same source and exact official logo/scene bytes. Never edit portable copies independently.
+
+See [activity developer notes](activity/README.md) and [layout verification](docs/layout-verification.md). The original `embed-test.html` is preserved.

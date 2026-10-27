@@ -1,6 +1,6 @@
 # UKWA · Spot the hazard
 
-Open `index.html` in a modern browser, or serve this directory from any static host. No build, dependencies, external fonts, analytics, storage or LMS APIs. All assets are local. The entire activity is approximately 35 KB before compression.
+Open `index.html` in a modern browser, or serve this directory from any static host. No build, analytics, storage or LMS APIs. Logo and scene artwork are local. Raleway is requested from Google Fonts, with system fallbacks when unavailable. See `../docs/branding.md` for the shared identity.
 
 ## Embed
 
@@ -16,7 +16,7 @@ The improved `Warehouse_Operations_Rise_Development_Pack copy.zip` and original 
 
 ## Interaction and access
 
-Three native hotspot buttons; Tab and Enter/Space activate controls. Arrow keys move between markers. Escape returns to the scene and restores marker focus. The optional magnifier supports pointer/touch and arrow keys while its button has focus. Each inspection has an enlarged crop and textual description. Responses remain available after a wrong choice; progress increments once per correctly reviewed hazard. All three lead to a recap and restart. Reduced motion removes animation and smooth scrolling.
+Six native hotspot buttons; Tab and Enter/Space activate controls. Arrow keys move between all markers. Escape returns to the scene and restores marker focus. The automatic magnifier follows mouse/pen movement; marker focus magnifies the corresponding area. Touch users can hold the image for inspection or tap markers for the detail panel. Each inspection has an enlarged crop and textual description. Wrong choices allow retry; each correctly reviewed hazard counts once. All six lead to a recap and restart. Reduced motion removes animation and smooth scrolling.
 
 ## Validation — 27 October 2026
 
@@ -27,3 +27,14 @@ Three native hotspot buttons; Tab and Enter/Space activate controls. Arrow keys 
 - **Browser rendering, real mobile/touch, assistive technology and Nucleus embedding remain unverified.** Browser automation was unavailable in the environment; its configured HTTP proxy also refused connections. DOM checks do not establish browser layout or accessibility conformance.
 
 Before course use, verify at desktop, tablet and 375px mobile widths, at 200% zoom, with keyboard and reduced motion, and inside the actual Nucleus block. Review learning copy against the original SCORM and replace the fallback artwork if preferred.
+
+
+## Revision: six inspection areas and automatic magnification
+
+The scene now includes three additional, newly authored practice hazards: a blocked exit, damaged racking upright and discarded strapping. Existing hazards are scaled down to encourage inspection. All six decisions and feedback require course-content review before production use.
+
+The magnifier appears automatically for mouse/pen movement over the image and hides on exit. There is no toggle. Focus on a marker magnifies its area; arrow keys move among all six markers. Touch users can hold the image for a detail and tap markers for a larger inspection. Visible markers are 26px (24px on mobile), with 44px interactive targets. The lens never intercepts marker clicks.
+
+## Validation of this revision
+
+Passed JavaScript syntax and DOM journey checks for all six correct responses, incorrect response/retry, progress deduplication, recap, reset, arrow-key wrap and lens positioning. Passed SVG XML, marker/progress counts and byte comparison of the supplied logo. The browser runtime was unavailable and its installation failed, so rendered desktop/mobile layout and real pointer/touch behaviour still require visual review. Nucleus embedding remains unverified.

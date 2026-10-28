@@ -41,4 +41,6 @@ See [activity developer notes](activity/README.md) and [layout verification](doc
 
 The opening guide's narrated question, feedback, retry, replay and mute are available as a separate block. See [guide build and sizing notes](guide-question/README.md). The authoring hub includes its versioned URL and responsive iframe code with an independent publication/media readiness gate. Existing hazard and introduction releases are preserved.
 
-Proposed release (awaiting verified Pages publication): `guide-question/guide-question-20261028-v01.html`. Build with `npm run build:guide`; test with `npm run test:guide`, `npm run test:guide-frame`, `npm run test:guide-hub` and `npm run test:guide-publication`. The new publication workflow verifies the exact deployed page and media hashes before a link can be called ready.
+Current guide release (publication verified by the hub and deployment check): `guide-question/guide-question-20261028-v02.html`. Build with `npm run build:guide`; test with `npm run test:guide`, `npm run test:guide-frame`, `npm run test:guide-hub` and `npm run test:guide-publication`. The new publication workflow verifies the exact deployed page and media hashes before a link can be called ready.
+
+Guide v02 preloads feedback and reuses its buffers for prompt narration after Submit. The approved recordings, text, design and historical v01 file are unchanged. See [timing findings and measurements](docs/guide-narration-timing.md); use `npm run test:guide-timing` and `npm run test:guide-races` for timing/cancellation checks.

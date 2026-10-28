@@ -1,6 +1,6 @@
 # Warehouse guide practice question — build brief
 
-Status: Interaction implemented in `guide-question/`; local browser/audio checks passed. Publication remains awaiting verified Pages deployment. See `guide-question/README.md` for release, sizing and verification details.
+Status: Interaction implemented in `guide-question/`; v02 adds feedback preloading and safe playback cancellation. Use the hub/publication workflow for the current deployment status. See `guide-question/README.md` for release, sizing and verification details.
 
 ## Content
 Based on the supplied SCORM Unit 1, Why Safety Matters: protecting people, meeting responsibilities, and reducing business disruption. This question is a new practice treatment, not an original scored question.

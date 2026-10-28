@@ -1,6 +1,6 @@
 // Authoring-only release gate. Learner activity has no network tracking or storage.
 (()=>{
- const build='guide-question-20261028-v01',url=new URL('guide-question/guide-question-20261028-v01.html',location.href).href;
+ const build='guide-question-20261028-v02',url=new URL('guide-question/guide-question-20261028-v02.html',location.href).href;
  const frame='<div style="container-type:inline-size;width:100%">\n  <iframe src="'+url+'" title="UKWA: Why safety matters — guide practice" width="100%" height="1120" style="display:block;width:100%;height:round(up,max(45rem,calc(78rem - 40cqw)),1px);border:0" loading="lazy"></iframe>\n</div>';
  document.querySelector('#guide-url').textContent=url;document.querySelector('#guide-embed').value=frame;
  let verified=false,checkGeneration=0;

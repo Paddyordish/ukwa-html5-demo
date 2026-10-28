@@ -1,12 +1,14 @@
 # Warehouse guide practice question
 
-A single untracked question built from `docs/guide-question-build-brief.md`. It uses the three supplied Unit 1 question/correct/retry MP3s and their exact companion transcript text. A is correct; B and C lead to the same supportive retry. It is a new practice treatment, not an original SCORM scored question.
+The current v02 release is a single untracked question built from `docs/guide-question-build-brief.md`. It uses the three supplied Unit 1 question/correct/retry MP3s and their exact companion transcript text. A is correct; B and C lead to the same supportive retry. It is a new practice treatment, not an original SCORM scored question.
+
+The v01 versioned HTML remains an unchanged historical snapshot. The approved PNG, narration MP3s, transcripts, wording, CSS/design and iframe sizing are unchanged in v02. See [narration timing findings](../docs/guide-narration-timing.md).
 
 ## Learner behaviour
 
 The opening guide appears neutral with the question; correct feedback uses a pleased expression, and retry uses a thoughtful, encouraging expression. The generated expression sheet is an edit of `shift-intro/assets/warehouse-hero.jpg`, preserving the woman's identity, PPE and tablet; the original photo is untouched. The 2046×768 PNG contains three 682px-wide portraits, rendered through separate SVG viewBoxes and faded between states. No lip sync is implied. Portrait and content frame bounds stay fixed across question, feedback and retry; reduced motion removes fades.
 
-The full question and choices are visible from the outset. Nothing plays automatically on page load. Play question, Replay or submitting an answer are explicit learner actions. Submission shows the full feedback text immediately and starts the relevant narration. One audio element owns all clips, so previous playback stops before another source loads. Mute persists across question/feedback/retry within the session. Play/Pause, Replay, Mute/Unmute, Try again and Practise again are keyboard/touch accessible.
+The full question and choices are visible from the outset. Nothing plays automatically on page load. Play question, Replay or submitting an answer are explicit learner actions. Submission shows the full feedback text immediately and starts the relevant narration. Three native audio elements preload the approved clips with `preload="auto"`; one controller permits only the active track to play. Normal state changes reuse ready media instead of replacing src and calling load. All inactive clips are paused before playback starts; metadata, ended and error events from inactive clips cannot change the current UI. Only genuine media failures reload a source. Pending playback is cancelled on retry, pause and page exit. Mute persists across question/feedback/retry within the session. Play/Pause, Replay, Mute/Unmute, Try again and Practise again are keyboard/touch accessible.
 
 Feedback and narration failures never hide readable content. Replay reloads failed media and allows recovery. Pending play promises are cancelled logically during transitions so stale failures cannot overwrite the new state. Escape, document visibility changes, pagehide and window blur pause playback. Native radio controls support Arrow keys and Space; focus moves to the feedback heading on submission and back to the first radio on retry.
 
@@ -14,18 +16,18 @@ There is no SCORM, xAPI, Nucleus, score, resume, analytics or persistent-storage
 
 ## Source, release and sizing
 
-Source: `index.html`, `style.css`, `app.js`. Run `python3 scripts/build-guide-question.py` to regenerate `guide-question-20261028-v01.html`; it inlines this activity's CSS/JS but shares the exact official logo, PNG and supplied MP3s by relative URL. Do not edit the generated file directly.
+Source: `index.html`, `style.css`, `app.js`. Run `python3 scripts/build-guide-question.py` to regenerate `guide-question-20261028-v02.html`; it inlines this activity's CSS/JS but shares the exact official logo, PNG and supplied MP3s by relative URL. Do not edit the generated file directly.
 
-Proposed learner URL, awaiting verified publication:
+Current versioned learner URL (confirm publication in the hub or verification run):
 
 ```text
-https://paddyordish.github.io/ukwa-html5-demo/guide-question/guide-question-20261028-v01.html
+https://paddyordish.github.io/ukwa-html5-demo/guide-question/guide-question-20261028-v02.html
 ```
 
 ```html
 <div style="container-type:inline-size;width:100%">
   <iframe
-    src="https://paddyordish.github.io/ukwa-html5-demo/guide-question/guide-question-20261028-v01.html"
+    src="https://paddyordish.github.io/ukwa-html5-demo/guide-question/guide-question-20261028-v02.html"
     title="UKWA: Why safety matters — guide practice"
     width="100%" height="1120"
     style="display:block;width:100%;height:round(up,max(45rem,calc(78rem - 40cqw)),1px);border:0"
@@ -51,11 +53,13 @@ The minimum height at very wide widths is 720px. Rem-based sizing grows with bro
 
 The hub card stays awaiting publication with Open/Copy disabled until a successful newest-main Pages deployment, exact HTTP 200 version/build marker and successful character/all-three-MP3 HEAD checks. A later failed recheck disables the links again.
 
-`.github/workflows/verify-guide-publication.yml` runs after relevant main pushes or manual dispatch on main. It waits for a successful Pages deployment of that exact commit, requests the exact learner URL, checks its build marker and compares SHA-256 hashes of the deployed PNG, logo and all three MP3s with the checked-out repository files. Only then does it produce `work/guide-publication.json`, an artifact and a successful verification run. No production-ready link may be reported before this evidence exists. A PR alone is not publication; previous user instructions prohibit automatic merging.
+`.github/workflows/verify-guide-publication.yml` runs after relevant main pushes or manual dispatch on main. It waits for a successful Pages deployment of that exact commit, requests the exact learner URL, checks its build marker and exact tested HTML bytes, then compares SHA-256 hashes of the deployed PNG, logo and all three MP3s with the checked-out repository files. Only then does it produce `work/guide-publication.json`, an artifact and a successful verification run. No production-ready link may be reported before this evidence exists. A PR alone is not publication; previous user instructions prohibit automatic merging.
 
 ## Validation
 
 - `npm run test:guide`: real MP3 decoding, question/correct/retry durations with MP3 padding tolerance, all A/B/C answers, exact visible feedback transcripts, replay/end/pause/mute, rapid transitions, network error/recovery, focus, reduced motion and fixed text/control bounds at the sizes above including 200% text.
+- `npm run test:guide-timing`: compare v01 cold feedback with v02 preloaded feedback under a controlled 700ms media response; measure actual playing events and first audio signal, and assert no on-submit fetch for warm feedback.
+- `npm run test:guide-races`: cancel truly pending feedback on retry/pause, then repeat six alternating retries and double replays; assert no overlap, stale playing events, refetch or frame movement.
 - `npm run test:guide-frame`: exact responsive iframe, fixed neighbouring native blocks, native keyboard exit and resulting blur pause, parent wheel scrolling, blocked-play fallback/recovery, visibility/pagehide handling and emulated mobile touch.
 - `npm run test:guide-hub`: pending/failed/old deployment, wrong/missing page, missing portrait/audio, correct release, URL/embed copy/fallback and revocation.
 - `npm run test:guide-publication`: verification fails for old/failed deployments, wrong/missing HTML and mismatched media bytes; matching HTTP/build/media succeeds.

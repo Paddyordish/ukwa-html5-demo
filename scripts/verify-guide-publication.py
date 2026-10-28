@@ -2,8 +2,8 @@
 import hashlib,json,os,time,urllib.request
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-BUILD='guide-question-20261028-v01'
-URL='https://paddyordish.github.io/ukwa-html5-demo/guide-question/guide-question-20261028-v01.html'
+BUILD='guide-question-20261028-v02'
+URL='https://paddyordish.github.io/ukwa-html5-demo/guide-question/guide-question-20261028-v02.html'
 BASE='https://paddyordish.github.io/ukwa-html5-demo/'
 MEDIA=['guide-question/assets/guide-expressions-v01.png','assets/brand/ukwa-logo.png']+['assets/audio/U01_Q01_'+part+'_Female_UK_v01.mp3' for part in ['Question','Correct','Retry']]
 def request(url):
@@ -27,6 +27,8 @@ def verify(fetch,repository,sha):
             if tag=='meta' and a.get('name')=='ukwa-build':self.build=a.get('content')
     marker=Marker();marker.feed(body.decode('utf-8'))
     if marker.build!=BUILD:raise RuntimeError('Published HTML has the wrong build marker')
+    html_hash=hashlib.sha256(body).hexdigest()
+    if html_hash!=hashlib.sha256((ROOT/'guide-question/guide-question-20261028-v02.html').read_bytes()).hexdigest():raise RuntimeError('Published HTML does not match the tested release bytes')
     hashes={}
     for path in MEDIA:
         status,final_url,payload=fetch(BASE+path)
@@ -34,7 +36,7 @@ def verify(fetch,repository,sha):
         expected=hashlib.sha256((ROOT/path).read_bytes()).hexdigest();actual=hashlib.sha256(payload).hexdigest()
         if actual!=expected:raise RuntimeError('Deployed media hash mismatch: '+path)
         hashes[path]=actual
-    return {'ready':True,'url':URL,'http_status':200,'build':BUILD,'commit':sha,'pages_run':run['html_url'],'verified_media_sha256':hashes}
+    return {'ready':True,'url':URL,'http_status':200,'build':BUILD,'html_sha256':html_hash,'commit':sha,'pages_run':run['html_url'],'verified_media_sha256':hashes}
 def main():
     repository=os.environ.get('GITHUB_REPOSITORY','Paddyordish/ukwa-html5-demo');sha=os.environ['GITHUB_SHA']
     for attempt in range(36):

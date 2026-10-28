@@ -1,5 +1,7 @@
 'use strict';
-const root=document.querySelector('#guide'),audio=document.querySelector('#narration');
+const root=document.querySelector('#guide');
+const clips=Object.fromEntries([...document.querySelectorAll('audio[data-track]')].map(clip=>[clip.dataset.track,clip]));
+let audio=clips.question;
 const form=document.querySelector('#question-form'),feedback=document.querySelector('#feedback');
 const playButton=document.querySelector('#play'),replayButton=document.querySelector('#replay'),muteButton=document.querySelector('#mute'),status=document.querySelector('#audio-status');
 const tracks={
@@ -15,23 +17,30 @@ function controls(){
  muteButton.setAttribute('aria-pressed',String(audio.muted));muteButton.textContent=audio.muted?'Unmute':'Mute';clock();
 }
 function report(text){const message=text+(audio.muted&&!/muted/i.test(text)?' · Muted':'');if(status.textContent!==message)status.textContent=message;controls();}
-function stop(){generation++;audio.pause();try{audio.currentTime=0;}catch{}started=false;}
+function rewind(clip){if(clip.currentTime>0||clip.ended){try{clip.currentTime=0;}catch{}}}
+function stop(){generation++;for(const clip of Object.values(clips)){clip.pause();rewind(clip);}started=false;}
 async function startClip(restart=false){
- const token=++generation;if(failed)audio.load();if(restart){audio.pause();try{audio.currentTime=0;}catch{}}
+ const clip=audio,token=++generation;
+ // Ready media is reused. Only a genuine media failure reloads a source.
+ for(const other of Object.values(clips))if(other!==clip)other.pause();
+ if(clip.error||clip.networkState===HTMLMediaElement.NETWORK_NO_SOURCE)clip.load();
+ if(restart){clip.pause();rewind(clip);}
  failed=false;started=true;report('Starting '+tracks[stage].label.toLowerCase()+'…');
- try{await audio.play();if(token!==generation)return;report('Playing '+tracks[stage].label.toLowerCase()+'.');}
- catch(error){if(token!==generation||error.name==='AbortError')return;failed=true;started=false;report('Audio unavailable. The full text is shown. Replay to try again.');}
+ try{await clip.play();if(token!==generation||clip!==audio){if(clip!==audio)clip.pause();return;}report('Playing '+tracks[stage].label.toLowerCase()+'.');}
+ catch(error){if(token!==generation||clip!==audio||error.name==='AbortError')return;failed=true;started=false;report('Audio unavailable. The full text is shown. Replay to try again.');}
 }
 function setStage(next,autoplay=false){
- stop();stage=next;root.dataset.stage=stage;failed=false;
- const track=tracks[stage];audio.src=track.src;audio.load();
+ stop();stage=next;root.dataset.stage=stage;audio=clips[stage];failed=Boolean(audio.error);
+ const track=tracks[stage];for(const clip of Object.values(clips))clip.dataset.active=String(clip===audio);
  form.hidden=stage!=='question';feedback.hidden=stage==='question';
  document.querySelectorAll('.pose').forEach(el=>el.classList.toggle('active',el.classList.contains(track.pose)));
  document.querySelector('#portrait').setAttribute('aria-label',`The opening warehouse guide, ${track.pose==='pleased'?'pleased and smiling':track.pose==='thoughtful'?'thoughtful and encouraging':'attentive and neutral'}`);
  document.querySelector('#pose-note').textContent=track.note;
  if(stage==='question'){form.reset();document.querySelector('#submit-answer').disabled=true;report('Question ready. Read and answer, or play the narration.');}
- else{document.querySelector('#feedback-label').textContent=stage==='correct'?'Practice complete ✓':'Have another go';document.querySelector('#feedback-title').textContent=track.title;document.querySelector('#feedback-copy').textContent=track.copy;document.querySelector('#try-again').hidden=stage!=='retry';document.querySelector('#practise-again').hidden=stage!=='correct';document.querySelector('#feedback-title').focus({preventScroll:true});report(track.label+' ready. The full text is shown.');}
+ else{document.querySelector('#feedback-label').textContent=stage==='correct'?'Practice complete ✓':'Have another go';document.querySelector('#feedback-title').textContent=track.title;document.querySelector('#feedback-copy').textContent=track.copy;document.querySelector('#try-again').hidden=stage!=='retry';document.querySelector('#practise-again').hidden=stage!=='correct';report(track.label+' ready. The full text is shown.');}
+ // Request playback in the submit gesture before focus can force layout work.
  if(autoplay)startClip();
+ if(stage!=='question')document.querySelector('#feedback-title').focus({preventScroll:true});
 }
 form.addEventListener('change',()=>{document.querySelector('#submit-answer').disabled=!form.querySelector('input:checked');});
 form.addEventListener('submit',event=>{event.preventDefault();const choice=form.querySelector('input:checked');if(choice)setStage(choice.value==='a'?'correct':'retry',true);});
@@ -39,11 +48,14 @@ function retry(){setStage('question');form.querySelector('input').focus({prevent
 document.querySelector('#try-again').onclick=retry;document.querySelector('#practise-again').onclick=retry;
 playButton.onclick=()=>{if(!audio.paused&&!audio.ended){generation++;audio.pause();report(tracks[stage].label+' paused.');}else startClip(audio.ended||failed);};
 replayButton.onclick=()=>startClip(true);
-muteButton.onclick=()=>{audio.muted=!audio.muted;report(audio.muted?'Narration muted.':'Narration unmuted.');};
-audio.addEventListener('loadedmetadata',clock);audio.addEventListener('timeupdate',clock);
-audio.addEventListener('ended',()=>{started=false;report(tracks[stage].label+' finished. Replay to listen again.');});
-audio.addEventListener('error',()=>{if(!audio.error)return;failed=true;started=false;report('Audio unavailable. The full text is shown. Replay to try again.');});
-function pauseOnExit(){generation++;if(!audio.paused){audio.pause();report('Narration paused. Resume when you are ready.');}}
+muteButton.onclick=()=>{const muted=!audio.muted;for(const clip of Object.values(clips))clip.muted=muted;report(audio.muted?'Narration muted.':'Narration unmuted.');};
+for(const clip of Object.values(clips)){
+ clip.addEventListener('loadedmetadata',()=>{if(clip===audio)clock();});
+ clip.addEventListener('timeupdate',()=>{if(clip===audio)clock();});
+ clip.addEventListener('ended',()=>{if(clip!==audio||!clip.ended)return;started=false;report(tracks[stage].label+' finished. Replay to listen again.');});
+ clip.addEventListener('error',()=>{if(clip!==audio||!clip.error)return;failed=true;started=false;report('Audio unavailable. The full text is shown. Replay to try again.');});
+}
+function pauseOnExit(){generation++;const playing=!audio.paused;for(const clip of Object.values(clips))clip.pause();if(playing)report('Narration paused. Resume when you are ready.');}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseOnExit();});window.addEventListener('pagehide',pauseOnExit);window.addEventListener('blur',pauseOnExit);
 document.addEventListener('keydown',event=>{if(event.key==='Escape')pauseOnExit();});
 controls();

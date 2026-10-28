@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="ukwa-build" content="shift-intro-v01">
+<title>UKWA · Your shift is about to begin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>:root{--navy:#10273c;--red:#b10023;--muted:#526777;--line:#dce4e8}*{box-sizing:border-box}html,body{margin:0;width:100%;background:#fff;color:var(--navy);font-family:Raleway,'Segoe UI',Arial,sans-serif}body{overflow-wrap:break-word}.intro{width:100%;max-width:1240px;margin:auto}.hero{position:relative;isolation:isolate;aspect-ratio:16/9;min-height:485px;background:var(--navy);overflow:hidden}.hero-image,.shade{position:absolute;inset:0;width:100%;height:100%}.hero-image{object-fit:cover;object-position:center}.shade{background:linear-gradient(90deg,rgba(8,29,46,.97) 0%,rgba(10,34,54,.92) 34%,rgba(12,37,59,.66) 61%,rgba(12,37,59,.17) 100%)}.copy{position:relative;z-index:1;width:61%;padding:clamp(28px,4.4vw,58px);padding-right:12px;color:#fff}h1{font-size:clamp(32px,4.1vw,53px);line-height:1.1;letter-spacing:-1.4px;font-weight:800;margin:0 0 28px}.copy p{font-size:clamp(15px,1.48vw,18px);line-height:1.65;font-weight:500;margin:0 0 20px;max-width:540px}.copy p:last-child{margin-bottom:0}.cue{opacity:1;transform:none}.is-enhanced .cue{opacity:0;transform:translateY(8px);transition:opacity .65s ease,transform .65s ease}.is-enhanced .cue.is-visible{opacity:1;transform:none}.player{display:flex;align-items:center;gap:24px;padding:18px 22px;border-bottom:1px solid var(--line);background:#fff}.logo{display:block;width:130px;height:auto;flex:none}.audio-wrap{flex:1;min-width:0}audio{display:block;width:100%;min-width:0;height:44px}.buttons{display:flex;gap:8px;flex:none}button{font:600 12px/1.4 Raleway,'Segoe UI',Arial,sans-serif;min-height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--navy);cursor:pointer;white-space:nowrap}button:hover{border-color:var(--navy)}button[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:#fff}button:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #d59a1f;outline-offset:3px}.status{font:500 12px/1.5 Raleway,'Segoe UI',Arial,sans-serif;color:var(--muted);margin:12px 22px;min-height:18px}.transcript{margin:0 22px 18px;font-size:13px;line-height:1.65}.transcript summary{cursor:pointer;display:list-item;width:fit-content;min-height:32px}.transcript>div{max-width:760px;padding:4px 0 8px}.transcript p{margin:8px 0 12px}a{color:var(--navy)}
+@media(max-width:900px){.copy{width:68%;padding:32px 24px 32px 32px}h1{font-size:37px;margin-bottom:24px}.copy p{font-size:16px;margin-bottom:18px}.hero{min-height:510px}.player{gap:14px;padding:14px 16px;flex-wrap:wrap}.logo{width:110px}.buttons{margin-left:auto}.audio-wrap{flex:1;min-width:240px}}
+@media(max-width:600px){.hero{aspect-ratio:auto;min-height:0}.hero-image{object-position:65% center}.shade{background:rgba(8,29,46,.87)}.copy{width:100%;padding:34px 26px;min-height:500px}.copy h1{font-size:35px;letter-spacing:-.8px;max-width:420px}.copy p{font-size:16px;line-height:1.65;max-width:460px}.player{display:grid;grid-template-columns:auto 1fr;gap:12px}.logo{width:112px}.audio-wrap{grid-column:1/-1;grid-row:2;min-width:0}.buttons{grid-column:2;grid-row:1;gap:6px}.buttons button{font-size:11px;padding:8px}.status{margin:12px 16px}.transcript{margin:0 16px 16px}}
+@media(max-width:360px){.copy{padding:28px 20px}.copy h1{font-size:31px}.logo{width:90px}.buttons button{padding:8px 7px}}
+@media(prefers-reduced-motion:reduce){.is-enhanced .cue{opacity:1;transform:none;transition:none}}
+@media print{.cue,.is-enhanced .cue{opacity:1;transform:none}.player,.status{display:none}.hero{break-inside:avoid}.transcript{display:block}}
+</style>
+</head>
+<body>
+<main class="intro" data-state="idle" aria-label="Warehouse safety introduction">
+<section class="hero" aria-labelledby="intro-title">
+<img class="hero-image" src="assets/warehouse-hero.jpg" alt="A warehouse operative in high-visibility clothing and a hard hat holding a tablet among warehouse racking." width="1672" height="941" fetchpriority="high">
+<div class="shade" aria-hidden="true"></div>
+<div class="copy">
+<h1 id="intro-title" class="cue is-visible" data-cue="0">Your shift is<br class="desktop-break"> about to begin</h1>
+<p class="cue" data-cue="2.23">Every warehouse contains potential hazards. Some are immediately obvious; others are easy to overlook during a busy shift.</p>
+<p class="cue" data-cue="11.13">Before starting work, take a moment to consider your surroundings.</p>
+<p class="cue" data-cue="15.29">Recognising hazards is the first step towards preventing accidents.</p>
+</div>
+</section>
+<section class="player" aria-label="Introduction narration controls">
+<img class="logo" src="../assets/brand/ukwa-logo.png" alt="UKWA — The Voice of Warehousing" width="2048" height="545">
+<div class="audio-wrap"><audio id="narration" controls preload="metadata" aria-label="Play the introduction narration"><source src="../assets/audio/U00_Intro_Female_UK_v01.mp3" type="audio/mpeg">Your browser does not support audio. <a href="../assets/audio/U00_Intro_Female_UK_v01.mp3">Download the narration</a>.</audio></div>
+<div class="buttons"><button id="replay" type="button">Replay</button><button id="read" type="button" aria-pressed="false">Show all text</button></div>
+</section>
+<p id="status" class="status" role="status">Press play to hear the introduction and reveal the text.</p>
+<details class="transcript"><summary>Read the transcript</summary><div>
+<p><strong>Your shift is about to begin.</strong></p>
+<p>Every warehouse contains potential hazards. Some are immediately obvious; others are easy to overlook during a busy shift.</p>
+<p>Before starting work, take a moment to consider your surroundings.</p>
+<p>Recognising hazards is the first step towards preventing accidents.</p>
+</div></details>
+<noscript><p class="status">All text is displayed. Use the audio controls to play the narration.</p></noscript>
+</main>
+<script>'use strict';
+(() => {
+ const intro=document.querySelector('.intro');
+ const audio=document.querySelector('#narration');
+ const cues=[...document.querySelectorAll('[data-cue]')];
+ const read=document.querySelector('#read');
+ const replay=document.querySelector('#replay');
+ const status=document.querySelector('#status');
+ const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
+ let showAll=false,frame=0,complete=false,failed=false;
+ const cueTimes=cues.map(node=>Number(node.dataset.cue));
+ function sync(){
+  const all=showAll||reduced.matches||complete;
+  cues.forEach((node,i)=>node.classList.toggle('is-visible',all||audio.currentTime>=cueTimes[i]));
+ }
+ function stopFrame(){if(frame)cancelAnimationFrame(frame);frame=0;}
+ function tick(){sync();frame=(!audio.paused&&!audio.ended)?requestAnimationFrame(tick):0;}
+ function setStatus(text){if(status.textContent!==text)status.textContent=text;}
+ async function play(){
+  complete=false;sync();
+  try{await audio.play();}catch(error){if(error.name==='AbortError'||failed)return;setStatus('Playback could not start. Use the audio player’s play button, or choose Show all text.');}
+ }
+ audio.addEventListener('play',()=>{failed=false;complete=false;intro.dataset.state='playing';setStatus(reduced.matches?'Narration playing. All text is visible.':'Narration playing. Text appears as it is spoken.');stopFrame();frame=requestAnimationFrame(tick);});
+ audio.addEventListener('pause',()=>{stopFrame();sync();if(!audio.ended&&!failed){intro.dataset.state='paused';setStatus('Narration paused. Resume using the audio player.');}});
+ audio.addEventListener('timeupdate',sync);
+ audio.addEventListener('seeking',()=>{complete=false;sync();});
+ audio.addEventListener('seeked',sync);
+ audio.addEventListener('ended',()=>{stopFrame();complete=true;intro.dataset.state='complete';sync();setStatus('Introduction finished. You can replay it or continue through the course.');});
+ audio.addEventListener('error',()=>{failed=true;stopFrame();showAll=true;sync();setStatus('Audio is unavailable. The full introduction text is visible.');});
+ replay.addEventListener('click',()=>{stopFrame();complete=false;showAll=false;read.setAttribute('aria-pressed','false');read.textContent='Show all text';audio.currentTime=0;sync();play();});
+ read.addEventListener('click',()=>{showAll=!showAll;read.setAttribute('aria-pressed',String(showAll));read.textContent=showAll?'Follow narration':'Show all text';sync();setStatus(showAll?'All introduction text is visible. Audio playback is optional.':reduced.matches?'Reduced motion is enabled; all text remains visible.':'Text now follows the narration’s playback position.');});
+ function motionChange(){sync();if(reduced.matches)setStatus('Reduced motion is enabled. All text is visible; narration is optional.');}
+ if(reduced.addEventListener)reduced.addEventListener('change',motionChange);
+ document.addEventListener('visibilitychange',()=>{if(document.hidden&&!audio.paused)audio.pause();});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!audio.paused)audio.pause();});
+ window.addEventListener('pagehide',()=>{audio.pause();stopFrame();});
+ intro.classList.add('is-enhanced');sync();motionChange();
+})();
+</script>
+</body></html>

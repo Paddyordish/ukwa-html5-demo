@@ -4,3 +4,17 @@
 @media(max-width:360px){.copy{padding:28px 20px}.copy h1{font-size:31px}.logo{width:90px}.buttons button{padding:8px 7px}}
 @media(prefers-reduced-motion:reduce){.is-enhanced .cue{opacity:1;transform:none;transition:none}}
 @media print{.cue,.is-enhanced .cue{opacity:1;transform:none}.player,.status{display:none}.hero{break-inside:avoid}.transcript{display:block}}
+
+
+/* v02: the parent course owns scrolling; every intro state fits this frame. */
+html,body{height:100%;overflow:hidden}
+.intro{height:100%;max-width:none;display:grid;grid-template-rows:minmax(0,1fr) auto auto;min-height:0}
+.hero{height:100%;min-height:0;aspect-ratio:auto}
+.copy{height:100%;padding-top:clamp(24px,4.4vw,58px);padding-bottom:24px}
+.player{min-width:0}
+.status{margin:9px 22px 12px;min-width:0;min-height:18px}
+@media(max-width:900px){.hero{min-height:0}.copy{padding-top:28px;padding-bottom:20px}}
+@media(max-width:600px){.hero{min-height:0;aspect-ratio:auto}.copy{min-height:0;padding:26px}.player{padding:10px 14px;gap:8px}.status{margin:8px 14px 10px;line-height:1.4;font-size:11px}.copy h1{margin-bottom:20px}.copy p{margin-bottom:16px}}
+@media(max-height:680px){.copy{padding-top:24px;padding-bottom:18px}h1{font-size:clamp(30px,4.1vw,43px);margin-bottom:22px}.copy p{line-height:1.5;margin-bottom:16px}}
+@media(max-height:680px) and (max-width:600px){.copy{padding:20px 24px}.copy h1{font-size:31px;line-height:1.1;margin-bottom:18px}.copy p{font-size:15px;line-height:1.5;margin-bottom:14px}}
+@media(max-height:590px) and (max-width:600px){.copy{padding:16px 20px}.copy h1{font-size:29px;margin-bottom:15px}.copy p{font-size:14px;line-height:1.5;margin-bottom:12px}}

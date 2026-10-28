@@ -10,7 +10,7 @@ const base='http://127.0.0.1:'+server.address().port;const screenshots=path.join
 try{
 for(const [width,height] of [[1240,900],[943,850],[600,850],[375,900],[320,900]]){
  const page=await context.newPage();await page.setViewportSize({width,height});await page.route(/https:\/\/fonts\./,r=>r.abort());const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto(base+'/shift-intro/intro-20261028-v01.html');await page.locator('.hero-image').evaluate(img=>img.decode());
+ await page.goto(base+'/shift-intro/intro-20261028-v02.html');await page.locator('.hero-image').evaluate(img=>img.decode());
  await page.waitForFunction(()=>document.querySelector('#narration').readyState>=1);
  assert.equal(await page.locator('.cue.is-visible').count(),1,'Only heading initially');
  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'No horizontal overflow');
@@ -34,3 +34,4 @@ const reduced=await context.newPage();await reduced.setViewportSize({width:943,h
 const nojsContext=await browser.newContext({javaScriptEnabled:false});const nojs=await nojsContext.newPage();await nojs.route(/https:\/\/fonts\./,r=>r.abort());await nojs.goto(base+'/shift-intro/');assert.equal(await nojs.locator('.cue').count(),4);assert.equal(await nojs.locator('.cue').last().evaluate(n=>getComputedStyle(n).opacity),'1');await nojs.close();console.log('PASS no-JavaScript: all text visible and native audio retained.');
 }finally{await browser.close();await new Promise(r=>server.close(r));}
 })().catch(e=>{console.error(e.stack);process.exitCode=1});
+

@@ -16,4 +16,5 @@ html=(activity/'index.html').read_text().replace('<link rel="stylesheet" href="s
 (activity/'embed-20261027-v8.html').write_text(html)
 (activity/'embed-20261028-v9.html').write_text(html)
 (activity/'embed-20261028-v10.html').write_text(html)
+(activity/'embed-20261028-v11.html').write_text(html)
 print('Generated preview.html from activity source')

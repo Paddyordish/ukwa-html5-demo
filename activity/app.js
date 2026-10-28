@@ -10,32 +10,33 @@ const hazards = [
 
 const crops = [ [265,185,230,280], [600,650,215,155], [850,500,180,220], [1020,288,215,245], [495,520,120,120], [355,750,140,100] ];
 const panel=document.querySelector('#panel'), scene=document.querySelector('#scene'), lens=document.querySelector('#lens');
-const workspace=document.querySelector('#workspace'), recap=document.querySelector('#recap');
+const workspace=document.querySelector('#workspace');
 document.documentElement.style.setProperty('--scene-image', `url("${document.querySelector('#warehouse').src}")`);
 let current=null;
-const reviewed=new Set();
+const answered=new Set(),explored=new Set();
+let activityComplete=false;
 const markers=document.querySelector('#markers');
 markers.innerHTML=hazards.map((h,i)=>`<button type="button" class="pin" style="--x:${h.x}%;--y:${h.y}%" data-hazard="${i}" aria-label="Area ${i+1}: ${h.name}" aria-controls="panel" aria-expanded="false" aria-describedby="keyboard-help"></button>`).join('');
 const pins=[...markers.querySelectorAll('.pin')];
 function progress(){
- document.querySelector('#count').textContent=`${reviewed.size} of ${hazards.length} reviewed`;
- document.querySelector('#progress').value=reviewed.size;
- pins.forEach((p,i)=>{p.classList.toggle('reviewed',reviewed.has(i));p.setAttribute('aria-label',`Area ${i+1}: ${hazards[i].name}${reviewed.has(i)?', reviewed':''}`);});
- recap.hidden=reviewed.size!==hazards.length||current!==null;
- workspace.classList.toggle('complete',!recap.hidden);
- document.querySelector('#find-one').disabled=reviewed.size===hazards.length;
+ document.querySelector('#count').textContent=`${explored.size} of ${hazards.length} explored`;
+ document.querySelector('#progress').value=explored.size;
+ pins.forEach((p,i)=>{p.classList.toggle('reviewed',explored.has(i));p.setAttribute('aria-label',`Area ${i+1}: ${hazards[i].name}${explored.has(i)?', explored':''}`);});
+ const completion=document.querySelector('#completion'),message=activityComplete?'Activity complete ✓':'';
+ if(completion.textContent!==message)completion.textContent=message;
+ document.querySelector('#find-one').disabled=explored.size===hazards.length;
  document.querySelector('#scene-frame').inert=current!==null;
 }
 function select(i){
- clearHint();cancelTouch();hideLens();current=i;
+ clearHint();cancelTouch();hideLens();const wasExplored=explored.has(i);current=i;explored.add(i);progress();
  const h=hazards[i];
  pins.forEach((p,j)=>p.setAttribute('aria-expanded',String(i===j)));
  document.querySelector('#scene-frame').inert=true;
- panel.hidden=false;recap.hidden=true;workspace.classList.remove('complete');workspace.classList.add('inspecting');
- panel.innerHTML=`<div class="panel-top"><button class="back" type="button" aria-label="Close hazard dialog">× Close</button><span class="eyebrow">Area ${i+1} of ${hazards.length}${reviewed.has(i)?' · Reviewed':''}</span></div><div class="panel-content"><div class="hazard-summary"><div class="inspection"><svg viewBox="${crops[i].join(' ')}" role="img" aria-label="Close-up: ${h.name}" preserveAspectRatio="xMidYMid meet"><image href="${document.querySelector('#warehouse').src}" width="1440" height="900"/></svg></div><h2 id="panel-title" tabindex="-1">${h.name}</h2><p class="description" id="hazard-description">${h.detail}</p></div><div class="decision"><h3 id="response-question">${h.question}</h3><div class="choices">${h.choices.map((c,j)=>`<button class="choice" type="button" data-answer="${j}"><span class="choice-letter" aria-hidden="true">${String.fromCharCode(65+j)}</span><span class="choice-label">${c}</span></button>`).join('')}</div><div id="feedback" role="status" aria-live="polite" hidden></div></div></div>`;
+ panel.hidden=false;workspace.classList.add('inspecting');
+ panel.innerHTML=`<div class="panel-top"><button class="back" type="button" aria-label="Close hazard dialog">× Close</button><span class="eyebrow">Area ${i+1} of ${hazards.length}${wasExplored?' · Explored':''}</span></div><div class="panel-content"><div class="hazard-summary"><div class="inspection"><svg viewBox="${crops[i].join(' ')}" role="img" aria-label="Close-up: ${h.name}" preserveAspectRatio="xMidYMid meet"><image href="${document.querySelector('#warehouse').src}" width="1440" height="900"/></svg></div><h2 id="panel-title" tabindex="-1">${h.name}</h2><p class="description" id="hazard-description">${h.detail}</p></div><div class="decision"><h3 id="response-question">${h.question}</h3><div class="choices">${h.choices.map((c,j)=>`<button class="choice" type="button" data-answer="${j}"><span class="choice-letter" aria-hidden="true">${String.fromCharCode(65+j)}</span><span class="choice-label">${c}</span></button>`).join('')}</div><div id="feedback" role="status" aria-live="polite" hidden></div></div></div>`;
  panel.querySelector('.back').onclick=back;
  panel.querySelectorAll('.choice').forEach(b=>b.onclick=()=>answer(Number(b.dataset.answer)));
- if(reviewed.has(i))showCorrect(h);
+ if(answered.has(i))showCorrect(h);
  panel.showModal();
  panel.querySelector('h2').focus({preventScroll:true});
 }
@@ -45,6 +46,7 @@ function back(){
  document.querySelector('#scene-frame').inert=false;
  if(panel.open)panel.close();panel.hidden=true;workspace.classList.remove('inspecting');
  pins.forEach(p=>p.setAttribute('aria-expanded','false'));
+ if(explored.size===hazards.length)activityComplete=true;
  progress();
  pins[last].focus({preventScroll:true});
 }
@@ -60,16 +62,16 @@ function showFeedback(title,message,correct){
 }
 function showCorrect(h){showFeedback('Safe response',h.why,true);}
 function answer(j){
- if(current===null||reviewed.has(current))return;
+ if(current===null||answered.has(current))return;
  const h=hazards[current];
- if(j===h.correct){reviewed.add(current);progress();showCorrect(h);}
+ if(j===h.correct){answered.add(current);showCorrect(h);}
  else showFeedback('Reconsider your response',h.retry,false);
  panel.querySelector('#feedback-title').focus({preventScroll:true});
 }
 let hintTimer=0;
 function clearHint(){clearTimeout(hintTimer);pins.forEach(p=>p.classList.remove('hint'));}
 document.querySelector('#find-one').onclick=()=>{
- clearHint();const i=hazards.findIndex((_,i)=>!reviewed.has(i));
+ clearHint();const i=hazards.findIndex((_,i)=>!explored.has(i));
  if(i<0)return;
  pins[i].classList.add('hint');
  document.querySelector('#hint-status').textContent=`Hint: ${hazards[i].name}. An inspection area is briefly outlined in the warehouse. Keyboard users can Tab to each inspection area.`;
@@ -77,7 +79,7 @@ document.querySelector('#find-one').onclick=()=>{
 };
 function reset(){
  clearHint();document.querySelector('#hint-status').textContent='';
- if(current!==null)back();reviewed.clear();progress();hideLens();
+ if(current!==null)back();answered.clear();explored.clear();activityComplete=false;progress();hideLens();
  pins[0].focus({preventScroll:true});
 }
 document.querySelector('#restart').onclick=reset;
@@ -116,12 +118,12 @@ function paint(point){
  // Keep the point under the pointer at the lens centre even when its circle is clamped.
  lens.style.backgroundPosition=`${radius-sx*zoom}px ${radius-sy*zoom}px`;
  const active=hazardAt({x:sx,y:sy});
- const done=active!==null&&reviewed.has(active);
+ const done=active!==null&&explored.has(active);
  lens.classList.toggle('available',active!==null);lens.classList.toggle('reviewed',done);
  const label=document.querySelector('#lens-label');
  label.hidden=active===null;
  if(active!==null){
-  label.textContent=done?'Reviewed — inspect again':'Inspect';
+  label.textContent=done?'Explored — inspect again':'Inspect';
   const w=label.offsetWidth,h=label.offsetHeight,gap=7;
   const below=cy+radius+gap;
   const top=below+h<=r.height?below:cy-radius-gap-h;

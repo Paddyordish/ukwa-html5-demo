@@ -12,7 +12,7 @@ const {start,snapshot}=require('./support.cjs');
  }
  for(let i=0;i<6;i++){
  const pin=initial.markers[i],x=pin.x+22,y=pin.y+22;
- await page.mouse.move(x,y);assert.equal(await page.locator('#lens').evaluate(el=>getComputedStyle(el).borderTopColor),'rgb(177, 0, 35)');assert.equal(await page.locator('#lens-label').textContent(),'Inspect');
+ const done=await page.evaluate(i=>explored.has(i),i);await page.mouse.move(x,y);assert.equal(await page.locator('#lens').evaluate(el=>getComputedStyle(el).borderTopColor),done?'rgb(35, 97, 76)':'rgb(177, 0, 35)');assert.equal(await page.locator('#lens-label').textContent(),done?'Explored — inspect again':'Inspect');
  const label=await page.locator('#lens-label').boundingBox(),glass=await page.locator('#lens').boundingBox();assert.ok(label.y+label.height<=glass.y||label.y>=glass.y+glass.height,'label overlaps detail');assert.ok(label.x>=initial.scene.x&&label.x+label.width<=initial.scene.x+initial.scene.width+1);
  await page.touchscreen.tap(x,y);assert.ok(await page.locator('#panel').evaluate(el=>el.open));await page.keyboard.press('Escape');
  await page.locator(`[data-hazard="${i}"]`).focus();await page.keyboard.press('Space');assert.ok(await page.locator('#panel').evaluate(el=>el.open));await page.keyboard.press('Escape');
@@ -20,8 +20,8 @@ const {start,snapshot}=require('./support.cjs');
  }
  // Still hold works on the invisible button itself, and movement cancels activation.
  const p=initial.markers[0],button=page.locator('[data-hazard="0"]');await button.dispatchEvent('pointerdown',{pointerType:'touch',clientX:p.x+22,clientY:p.y+22});await page.waitForTimeout(350);assert.ok(await page.locator('#lens').evaluate(el=>el.classList.contains('on')));await button.dispatchEvent('pointermove',{pointerType:'touch',clientX:p.x+60,clientY:p.y+22});await button.dispatchEvent('click',{detail:1,clientX:p.x+22,clientY:p.y+22});assert.equal(await page.locator('#panel').evaluate(el=>el.open),false);
- await button.focus();await page.keyboard.press('Enter');await page.locator('[data-answer="1"]').click();await page.locator('#continue').click();await page.locator('#find-one').click();assert.equal(await page.locator('.pin.hint').getAttribute('data-hazard'),'1');await page.locator('[data-hazard="1"]').focus();await page.keyboard.press('Enter');assert.equal(await page.locator('.pin.hint').count(),0);await page.keyboard.press('Escape');
- await page.mouse.move(initial.scene.x+initial.scene.width*.9,initial.scene.y+20);await page.screenshot({path:`work/v8-discovery-${width}.png`});
+ await page.locator('#restart').click();await button.focus();await page.keyboard.press('Enter');await page.locator('[data-answer="1"]').click();await page.locator('#continue').click();await page.locator('#find-one').click();assert.equal(await page.locator('.pin.hint').getAttribute('data-hazard'),'1');await page.locator('[data-hazard="1"]').focus();await page.keyboard.press('Enter');assert.equal(await page.locator('.pin.hint').count(),0);await page.keyboard.press('Escape');
+ await page.mouse.move(initial.scene.x+initial.scene.width*.9,initial.scene.y+20);await page.screenshot({path:`work/v9-discovery-${width}.png`});
  const after=await snapshot(page);assert.deepEqual(after.scene,initial.scene);await context.close();console.log(`PASS discovery ${width}: no markers, timed hint, nearest-region arbitration (${arbitration} overlapping samples), rim/label, touch taps/hold/cancel and keyboard Space/focus`);
  }
 }finally{await env.close();}})().catch(e=>{console.error(e.stack);process.exitCode=1;});

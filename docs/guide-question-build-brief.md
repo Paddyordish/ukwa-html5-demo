@@ -1,6 +1,6 @@
 # Warehouse guide practice question — build brief
 
-Status: Audio assets supplied; interaction not built or published yet.
+Status: Interaction implemented in `guide-question/`; local browser/audio checks passed. Publication remains awaiting verified Pages deployment. See `guide-question/README.md` for release, sizing and verification details.
 
 ## Content
 Based on the supplied SCORM Unit 1, Why Safety Matters: protecting people, meeting responsibilities, and reducing business disruption. This question is a new practice treatment, not an original scored question.

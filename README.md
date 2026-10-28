@@ -36,3 +36,9 @@ The root [interaction hub](index.html) copies this same URL and iframe code and 
 `activity/index.html` is the source entry point. `python3 scripts/build-preview.py` regenerates `preview.html`, the compatibility files `activity/embed-20261027.html` and `activity/embed-20261027-v7.html` and `activity/embed-20261027-v8.html`, and `activity/embed-20261028-v9.html` and `activity/embed-20261028-v10.html` and `activity/embed-20261028-v11.html` from the same source and exact official logo/scene bytes. Never edit portable copies independently.
 
 See [activity developer notes](activity/README.md) and [layout verification](docs/layout-verification.md). The original `embed-test.html` is preserved.
+
+## Warehouse guide practice question
+
+The opening guide's narrated question, feedback, retry, replay and mute are available as a separate block. See [guide build and sizing notes](guide-question/README.md). The authoring hub includes its versioned URL and responsive iframe code with an independent publication/media readiness gate. Existing hazard and introduction releases are preserved.
+
+Proposed release (awaiting verified Pages publication): `guide-question/guide-question-20261028-v01.html`. Build with `npm run build:guide`; test with `npm run test:guide`, `npm run test:guide-frame`, `npm run test:guide-hub` and `npm run test:guide-publication`. The new publication workflow verifies the exact deployed page and media hashes before a link can be called ready.

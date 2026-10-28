@@ -1,15 +1,15 @@
 # UKWA warehouse hazard practice
 
-Release **embed-20261028-v9** keeps the warehouse stationary beneath compact question dialogs. Permanent markers are removed: the magnifier reveals red/green discovery states and an outside label. A timed hint and keyboard focus outlines support discovery; six practice decisions, retry feedback and restart stay inside the activity. Progress counts distinct popup openings (“6 of 6 explored”); after the final popup closes, “Activity complete ✓” appears beside progress. Correct answers are optional for this internal completion state.
+Release **embed-20261028-v10** keeps the warehouse stationary beneath compact question dialogs. Permanent markers are removed: the magnifier reveals red/green discovery states and an outside label. A timed hint and keyboard focus outlines support discovery; six practice decisions, retry feedback and restart stay inside the activity. A reserved, bottom-centred live status counts distinct popup openings (“6 of 6 hazards found”); after the final popup closes it reads “6 of 6 hazards found · Activity complete ✓”. Popups use hazard names, with only “Already explored” on revisits; there is no sequence numbering or progress bar. Correct answers are optional for this internal completion state.
 
 After this PR is merged and GitHub Pages deployment succeeds, use the version-specific URL:
 
-https://paddyordish.github.io/ukwa-html5-demo/activity/embed-20261028-v9.html
+https://paddyordish.github.io/ukwa-html5-demo/activity/embed-20261028-v10.html
 
 ```html
 <div style="container-type:inline-size;width:100%">
   <iframe
-    src="https://paddyordish.github.io/ukwa-html5-demo/activity/embed-20261028-v9.html"
+    src="https://paddyordish.github.io/ukwa-html5-demo/activity/embed-20261028-v10.html"
     title="UKWA warehouse hazard practice"
     width="100%" height="871"
     style="display:block;width:100%;height:clamp(560px,round(up,calc(62.5cqw + 96px),1px),871px);border:0"
@@ -32,6 +32,6 @@ For URL-only LMS blocks, enter the corresponding height above. If the LMS strips
 
 The root [interaction hub](index.html) copies this same URL and iframe code and shows the build and GitHub publication status. Unmerged work is not automatically available at the public URL. The PR's review Page is separate from the public LMS embed.
 
-`activity/index.html` is the source entry point. `python3 scripts/build-preview.py` regenerates `preview.html`, the compatibility files `activity/embed-20261027.html` and `activity/embed-20261027-v7.html` and `activity/embed-20261027-v8.html`, and `activity/embed-20261028-v9.html` from the same source and exact official logo/scene bytes. Never edit portable copies independently.
+`activity/index.html` is the source entry point. `python3 scripts/build-preview.py` regenerates `preview.html`, the compatibility files `activity/embed-20261027.html` and `activity/embed-20261027-v7.html` and `activity/embed-20261027-v8.html`, and `activity/embed-20261028-v9.html` and `activity/embed-20261028-v10.html` from the same source and exact official logo/scene bytes. Never edit portable copies independently.
 
 See [activity developer notes](activity/README.md) and [layout verification](docs/layout-verification.md). The original `embed-test.html` is preserved.

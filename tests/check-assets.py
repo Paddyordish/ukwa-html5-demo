@@ -17,7 +17,7 @@ logo=(root/'assets/brand/ukwa-logo.png').read_bytes()
 assert hashlib.sha1(b'blob '+str(len(logo)).encode()+b'\0'+logo).hexdigest()=='d9195453483e2b41c08b96077068560ccdca0571'
 embed=(root/'embed-test.html').read_bytes()
 assert hashlib.sha1(b'blob '+str(len(embed)).encode()+b'\0'+embed).hexdigest()=='0e1d58d41ea3b2c88f1e1240f54555994aef3d13'
-for portable in ['activity/embed-20261027.html','activity/embed-20261027-v7.html','activity/embed-20261027-v8.html','activity/embed-20261028-v9.html']:
+for portable in ['activity/embed-20261027.html','activity/embed-20261027-v7.html','activity/embed-20261027-v8.html','activity/embed-20261028-v9.html','activity/embed-20261028-v10.html']:
  assert (root/portable).read_bytes()==(root/'preview.html').read_bytes()
 before=(root/'preview.html').read_bytes();subprocess.run(['python3',str(root/'scripts/build-preview.py')],check=True);assert before==(root/'preview.html').read_bytes()
 html=(root/'activity/index.html').read_text();preview=(root/'preview.html').read_text()
@@ -25,10 +25,10 @@ for text in ['Look closer.','Act safer.','What could','Nucleus','FIELD PRACTICE'
 assert 'glass' not in html and 'magnify.onclick' not in source
 assert 'touch-action:pan-y pinch-zoom' in (root/'activity/style.css').read_text()
 assert 'scrollIntoView' not in source
-assert 'embed-20261028-v9' in html
+assert 'embed-20261028-v10' in html
 assert '<dialog ' in html
 hub=(root/'index.html').read_text()
-assert 'embed-20261028-v9.html' in hub and 'height:clamp(560px,round(up,calc(62.5cqw + 96px),1px),871px)' in hub
+assert 'embed-20261028-v10.html' in hub and 'height:clamp(560px,round(up,calc(62.5cqw + 96px),1px),871px)' in hub
 assert 'height="850"' not in hub
 assert base64.b64encode(logo).decode() in preview
 print('PASS SVG, six feature/marker alignments, non-overlapping 44px targets at 320–1440px, exact logo/embed bytes, reproducible preview and embed boundaries')

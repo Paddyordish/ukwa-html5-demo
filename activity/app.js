@@ -16,13 +16,13 @@ let current=null;
 const answered=new Set(),explored=new Set();
 let activityComplete=false;
 const markers=document.querySelector('#markers');
-markers.innerHTML=hazards.map((h,i)=>`<button type="button" class="pin" style="--x:${h.x}%;--y:${h.y}%" data-hazard="${i}" aria-label="Area ${i+1}: ${h.name}" aria-controls="panel" aria-expanded="false" aria-describedby="keyboard-help"></button>`).join('');
+markers.innerHTML=hazards.map((h,i)=>`<button type="button" class="pin" style="--x:${h.x}%;--y:${h.y}%" data-hazard="${i}" aria-label="${h.name}" aria-controls="panel" aria-expanded="false" aria-describedby="keyboard-help"></button>`).join('');
 const pins=[...markers.querySelectorAll('.pin')];
 function progress(){
- document.querySelector('#count').textContent=`${explored.size} of ${hazards.length} explored`;
- document.querySelector('#progress').value=explored.size;
- pins.forEach((p,i)=>{p.classList.toggle('reviewed',explored.has(i));p.setAttribute('aria-label',`Area ${i+1}: ${hazards[i].name}${explored.has(i)?', explored':''}`);});
- const completion=document.querySelector('#completion'),message=activityComplete?'Activity complete ✓':'';
+ const count=document.querySelector('#count'),text=`${explored.size} of ${hazards.length} hazards found`;
+ if(count.textContent!==text)count.textContent=text;
+ pins.forEach((p,i)=>{p.classList.toggle('reviewed',explored.has(i));p.setAttribute('aria-label',`${hazards[i].name}${explored.has(i)?', explored':''}`);});
+ const completion=document.querySelector('#completion'),message=activityComplete?' · Activity complete ✓':'';
  if(completion.textContent!==message)completion.textContent=message;
  document.querySelector('#find-one').disabled=explored.size===hazards.length;
  document.querySelector('#scene-frame').inert=current!==null;
@@ -33,7 +33,7 @@ function select(i){
  pins.forEach((p,j)=>p.setAttribute('aria-expanded',String(i===j)));
  document.querySelector('#scene-frame').inert=true;
  panel.hidden=false;workspace.classList.add('inspecting');
- panel.innerHTML=`<div class="panel-top"><button class="back" type="button" aria-label="Close hazard dialog">× Close</button><span class="eyebrow">Area ${i+1} of ${hazards.length}${wasExplored?' · Explored':''}</span></div><div class="panel-content"><div class="hazard-summary"><div class="inspection"><svg viewBox="${crops[i].join(' ')}" role="img" aria-label="Close-up: ${h.name}" preserveAspectRatio="xMidYMid meet"><image href="${document.querySelector('#warehouse').src}" width="1440" height="900"/></svg></div><h2 id="panel-title" tabindex="-1">${h.name}</h2><p class="description" id="hazard-description">${h.detail}</p></div><div class="decision"><h3 id="response-question">${h.question}</h3><div class="choices">${h.choices.map((c,j)=>`<button class="choice" type="button" data-answer="${j}"><span class="choice-letter" aria-hidden="true">${String.fromCharCode(65+j)}</span><span class="choice-label">${c}</span></button>`).join('')}</div><div id="feedback" role="status" aria-live="polite" hidden></div></div></div>`;
+ panel.innerHTML=`<div class="panel-top"><button class="back" type="button" aria-label="Close hazard dialog">× Close</button>${wasExplored?'<span class="eyebrow">Already explored</span>':''}</div><div class="panel-content"><div class="hazard-summary"><div class="inspection"><svg viewBox="${crops[i].join(' ')}" role="img" aria-label="Close-up: ${h.name}" preserveAspectRatio="xMidYMid meet"><image href="${document.querySelector('#warehouse').src}" width="1440" height="900"/></svg></div><h2 id="panel-title" tabindex="-1">${h.name}</h2><p class="description" id="hazard-description">${h.detail}</p></div><div class="decision"><h3 id="response-question">${h.question}</h3><div class="choices">${h.choices.map((c,j)=>`<button class="choice" type="button" data-answer="${j}"><span class="choice-letter" aria-hidden="true">${String.fromCharCode(65+j)}</span><span class="choice-label">${c}</span></button>`).join('')}</div><div id="feedback" role="status" aria-live="polite" hidden></div></div></div>`;
  panel.querySelector('.back').onclick=back;
  panel.querySelectorAll('.choice').forEach(b=>b.onclick=()=>answer(Number(b.dataset.answer)));
  if(answered.has(i))showCorrect(h);

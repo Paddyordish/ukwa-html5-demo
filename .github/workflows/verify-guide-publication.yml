@@ -1,0 +1,31 @@
+name: Verify guide question publication
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'guide-question/**'
+      - 'assets/audio/U01_Q01_*'
+      - 'scripts/verify-guide-publication.py'
+      - '.github/workflows/verify-guide-publication.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: guide-question-publication
+  cancel-in-progress: true
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for Pages and verify exact learner URL and media
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/verify-guide-publication.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: guide-publication-${{ github.sha }}
+          path: work/guide-publication.json

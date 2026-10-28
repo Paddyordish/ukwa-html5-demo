@@ -1,3 +1,22 @@
+# Uncapped width and no-scroll popups (v11)
+
+Built on latest main `8469a7d`, preserving the narrated introduction, native audio resources and authoring hub work added since PR #9. No open PRs were present. The activity previously had both a 1240px width limit and an 871px height cap; those constraints reduced scene width inside wider LMS blocks.
+
+The activity now has no maximum width or height and no scene/header/footer side padding. Its exact 8:5 image scales to the complete available width when the host uses the updated formula: `max(42rem, ceil(width × 5/8 + 6rem))`. At default font size that is 672px minimum, 996px at 1440px width and 1296px at 1920px width. At 200% text the rem-based minimum becomes 1344px. The popup has neither a scrolling container nor a content-height clipping rule; the host reserves sufficient space instead. The previous short-frame scrolling fallback is deliberately removed. An arbitrary short fixed iframe cannot simultaneously fit unlimited enlarged text and prohibit scrolling/clipping, so the supported height contract is explicit in the hub and README.
+
+Passed in isolated Chromium 154.0.8037.57 on Linux:
+
+- Complete six-hazard wrong/retry/correct/close/reopen/completion/restart journeys at 943×686, 1240×871, 1440×996, 1920×1296, 768×672, 375×672 and 320×672, with unchanged scene/image/button rectangles and zero document/popup overflow.
+- All question, incorrect and correct feedback states at 320/375×1344 with 200% text: every visible popup button fits within the dialog, the dialog fits within the viewport, and document scroll offsets/extents remain zero. No scrolling into view is used to pass these assertions.
+- Exact updated iframe wrapper from 320px through 1920px, with no 1240px cap, complete artwork, six aligned activation regions and live-resize magnifier sampling.
+- Completion footer at desktop/mobile and enlarged text; keyboard focus trapping/exit and Chromium-emulated touch panning distinguish normal parent course scrolling from inner activity scrolling. The final iframe touch run scrolled the parent by 82px and kept inner scroll zero.
+- Publication gate scenarios: running/failed deployment, success for an old main commit, wrong build HTML and missing URL all leave Open/Copy disabled. Successful newest-main Pages deployment plus the exact correct URL enables them; a failed recheck revokes an earlier success. These are controlled local tests, not a claim of v11 publication.
+- Exact logo/SVG/original embed-test preservation and seven reproducible portable files. The introduction card, narration links and intro embed are preserved.
+
+Live verification: GitHub reports a successful Pages deployment for current main `8469a7d` (workflow run 40679974246). That is the pre-v11 build. The new v11 release is on an unmerged branch. A direct HTTPS request to the exact proposed URL was blocked by the environment proxy (`CONNECT tunnel failed`, proxy response 403; no origin HTTP response). Therefore the v11 public URL is **not verified and not ready**. The hub will only enable it after merge, successful current-main deployment and its own exact-URL/build check.
+
+Real Nucleus authoring/learner views and host CSS sanitisation, physical touch devices, Safari/Firefox, screen readers and production font loading remain unverified. Font requests in browser tests use deterministic system fallbacks. The following records describe historical versions and their earlier fixed-width/scrolling behaviour.
+
 # Bottom-centred hazard progress (v10)
 
 Built on latest main `574339d` (merged PR #8), with no open PRs at inspection. No new screenshots were attached to this request; current-main source and fresh browser screenshots were used.

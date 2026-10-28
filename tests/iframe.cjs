@@ -3,7 +3,7 @@ const {start}=require('./support.cjs');
 (async()=>{const env=await start();try{
  // A native-style neighbour harness. This is deliberately not presented as the real LMS.
  const page=await env.browser.newPage({viewport:{width:1100,height:850},reducedMotion:'reduce'});await page.route(/https:\/\/fonts\./,r=>r.abort());
- await page.setContent(`<main style="margin:20px"><button id="before">Native block before activity</button><div style="container-type:inline-size;width:943px;margin:16px 0"><iframe title="Warehouse practice" src="${env.origin}/activity/embed-20261028-v9.html" style="display:block;width:100%;height:clamp(560px,round(up,calc(62.5cqw + 96px),1px),871px);border:0"></iframe></div><button id="after">Native block after activity</button></main>`);
+ await page.setContent(`<main style="margin:20px"><button id="before">Native block before activity</button><div style="container-type:inline-size;width:943px;margin:16px 0"><iframe title="Warehouse practice" src="${env.origin}/activity/embed-20261028-v10.html" style="display:block;width:100%;height:clamp(560px,round(up,calc(62.5cqw + 96px),1px),871px);border:0"></iframe></div><button id="after">Native block after activity</button></main>`);
  const frame=page.frameLocator('iframe');await frame.locator('.pin').first().waitFor();
  const outerHeight=await page.evaluate(()=>document.documentElement.scrollHeight),afterTop=(await page.locator('#after').boundingBox()).y;
  const bounds=()=>frame.locator('#scene').evaluate(el=>{const r=el.getBoundingClientRect();return [r.x,r.y,r.width,r.height];});const initial=await bounds();
@@ -16,13 +16,13 @@ const {start}=require('./support.cjs');
   await frame.locator('#continue').click();assert.deepEqual(await bounds(),initial);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollHeight),outerHeight);assert.equal((await page.locator('#after').boundingBox()).y,afterTop);
  }
- assert.equal(await frame.locator('#completion').textContent(),'Activity complete ✓');await frame.locator('#restart').focus();await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>document.activeElement.id),'after','Tab can leave after the modal closes');
- await frame.locator('#restart').click();assert.equal(await frame.locator('#count').textContent(),'0 of 6 explored');await page.screenshot({path:'work/v9-iframe-neighbours.png',fullPage:true});await page.close();
+ assert.equal(await frame.locator('#completion').textContent(),' · Activity complete ✓');await frame.locator('#restart').focus();await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>document.activeElement.id),'after','Tab can leave after the modal closes');
+ await frame.locator('#restart').click();assert.equal(await frame.locator('#count').textContent(),'0 of 6 hazards found');await page.screenshot({path:'work/v10-iframe-neighbours.png',fullPage:true});await page.close();
  console.log('PASS iframe: six dialogs keep scene/native neighbours fixed, modal traps focus, closing permits Tab back to native controls');
  // Browser-generated touch gestures, rather than synthetic pointer event listeners alone.
  const context=await env.browser.newContext({viewport:{width:399,height:800},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
  const mobile=await context.newPage();await mobile.route(/https:\/\/fonts\./,r=>r.abort());
- await mobile.setContent(`<style>html,body{margin:0;touch-action:auto}main{margin:12px}iframe{display:block;width:375px;height:560px;border:0}</style><main><p style="margin:0;height:40px">Native course content</p><iframe title="Warehouse practice" src="${env.origin}/activity/embed-20261028-v9.html"></iframe><p style="height:1800px">More native course content</p></main>`);
+ await mobile.setContent(`<style>html,body{margin:0;touch-action:auto}main{margin:12px}iframe{display:block;width:375px;height:560px;border:0}</style><main><p style="margin:0;height:40px">Native course content</p><iframe title="Warehouse practice" src="${env.origin}/activity/embed-20261028-v10.html"></iframe><p style="height:1800px">More native course content</p></main>`);
  const inside=mobile.frameLocator('iframe');await inside.locator('.pin').first().waitFor();
  const imageRect=await inside.locator('#scene').boundingBox();const fixed=await inside.locator('#scene').evaluate(el=>{const r=el.getBoundingClientRect();return [r.x,r.y,r.width,r.height];});
  const cdp=await context.newCDPSession(mobile);

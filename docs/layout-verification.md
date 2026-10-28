@@ -1,3 +1,15 @@
+# Bottom-centred hazard progress (v10)
+
+Built on latest main `574339d` (merged PR #8), with no open PRs at inspection. No new screenshots were attached to this request; current-main source and fresh browser screenshots were used.
+
+Popup area numbering is removed. The title remains and revisits show only “Already explored”. Invisible inspection buttons use hazard names without sequence numbers. The top-right counter, completion text and progress element/styles are removed.
+
+A reserved bottom-centred text status now reads “0 of 6 hazards found” through “6 of 6 hazards found”; after the final popup closes, the green suffix “ · Activity complete ✓” appears. Correct answers remain separate practice state. A polite atomic live region covers the complete status, and unchanged counts are not rewritten on repeated openings. Help and Restart sit below it at opposite sides. A 36px logo header and 60px footer preserve the same total 96px of controls and the v9 responsive iframe formula; the official logo keeps its exact proportions. Enlarged text gets a larger reserved status row and accessible popup fallback. No normal journey state resizes the scene.
+
+Tests cover arbitrary discovery order, duplicate/reopened hazards, final-popup delay, incorrect feedback, continued decisions and restart, stable scene/footer geometry, navy/green text, no progress bar, unnumbered popup labels, all six hazard journeys, desktop/mobile frames, live resizing, centred magnification, hints, focus and touch behaviour. See the checks below for the retained scene-fit baseline. Real Nucleus authoring/learner views, host HTML/CSS sanitisation, Safari/Firefox, physical touch devices, screen readers and production font loading remain unverified. Screenshots and font-deterministic automated checks use isolated Chromium 154.0.8037.57 on Linux.
+
+The following sections retain earlier v9/v8 implementation and verification history; their descriptions of top-right progress are historical.
+
 # Full-width scene fit (v9)
 
 Built on latest main `d54a303` (merged PR #7); no open PRs were present. This targeted change preserves the discovery/dialog implementation. No new screenshot was attached to the request; current-main source and the available earlier screenshots informed diagnosis, followed by new local browser screenshots.

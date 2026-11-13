@@ -1,0 +1,40 @@
+{
+  "build": "ukwa-inline-20261113-v02",
+  "purpose": "Four on-page V2 activities; no popup or browser Back journey.",
+  "sourceData": "Existing approved PPE v01, hazard v11, guide v02 and introduction v02; artwork and narration unchanged.",
+  "assets": [
+    {
+      "path": "assets/ppe-check/poster.png",
+      "sha256": "718e1176030a7695c22f63fae1fc11cde2a7f330c5ee88c05220acd5deab5f2a"
+    },
+    {
+      "path": "activity/assets/warehouse.svg",
+      "sha256": "1f06a9ae28e8ba92a9c01d9b827e2a8fb96471eee8d6116a065ff2e7f07fb436"
+    },
+    {
+      "path": "guide-question/assets/guide-expressions-v01.png",
+      "sha256": "87529ec4d2fe3bd61b85294ae036952e46e3f2af5f8a94efa692e7fe96b73bb6"
+    },
+    {
+      "path": "shift-intro/assets/warehouse-hero.jpg",
+      "sha256": "a21c9ae9a7fe259f249f8c16aae5f11bd3b9a32ad2d8803679993d4b0cefa845"
+    },
+    {
+      "path": "assets/audio/U00_Intro_Female_UK_v01.mp3",
+      "sha256": "52d6a40916bdc6da4e96b4706f61d95d8de276640c075ea4f545bd8c1b6a63c4"
+    },
+    {
+      "path": "assets/audio/U01_Q01_Question_Female_UK_v01.mp3",
+      "sha256": "6cc351972cf3224a2980f663d71597fca731f3b6dcb325c3fafaed2dedfff795"
+    },
+    {
+      "path": "assets/audio/U01_Q01_Correct_Female_UK_v01.mp3",
+      "sha256": "084fb1b7b9aa664291e2bcc2dcdef628bd48301c1c2cb39b0ae5c2fdced8c5e6"
+    },
+    {
+      "path": "assets/audio/U01_Q01_Retry_Female_UK_v01.mp3",
+      "sha256": "8530e921f57a0e21a898195173364716ed569991f187c5a6317b397bbe012103"
+    }
+  ],
+  "visualChange": "Introduction has one visible title, larger brand and quieter player controls; source artwork/narration unchanged."
+}

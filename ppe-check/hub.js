@@ -2,7 +2,7 @@
 'use strict';
 const repo='Paddyordish/ukwa-html5-demo', api='https://api.github.com/repos/'+repo;
 const url=new URL('ppe-check/ppe-check-20261113-v01.html',location.href).href;
-const code='<iframe src="'+url+'" title="UKWA PPE game: Ready for your shift?" width="100%" style="display:block;width:100%;aspect-ratio:16/9;border:0" loading="lazy"></iframe>';
+const code=url;
 const $=s=>document.querySelector(s); let ready=false;
 $('#ppe-url').textContent=url;$('#ppe-embed').value=code;
 function setReady(ok,text){ready=ok;$('#ppe-ready').textContent=text;$('#ppe-open').setAttribute('aria-disabled',String(!ok));if(ok)$('#ppe-open').href=url;else $('#ppe-open').removeAttribute('href');document.querySelectorAll('[data-ppe-copy]').forEach(b=>b.disabled=!ok);}

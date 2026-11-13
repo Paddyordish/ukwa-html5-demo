@@ -8,12 +8,14 @@ Six decisions cover a damaged helmet, dirty goggles, missing required high visib
 
 Keyboard: Tab/Shift+Tab and Enter/Space. The original poster is displayed unchanged, with no added markers or overlay icons. Matching helmet, goggles, vest, gloves, trousers and boot icons appear only on the kit buttons. Resolved buttons retain their PPE icon with a small tick. The kit buttons open the checks. Text view hides the poster without removing any scenario or action. Reduced-motion preference respected. Standalone page uses normal document scrolling on small screens; no nested scrolling panes.
 
-## V2 embed
+## V2 course launch (verified)
 
-The V2 Embed block observed in this build offers a URL/title and a fixed 16:9 frame. Full mobile-sized game content cannot fit a short iframe. Therefore this release detects embedding and shows a compact launch panel. The panel opens the full game in a new tab (`rel=noopener`). It does not clip, shrink essential game text or introduce internal scrollbars. `?embed=1` previews the same launch panel standalone. Embed the versioned URL; do not embed the authoring hub.
+Use a native **Button** with the versioned game URL. Actual learner preview rendered the native button with `target=_self`: the full game opens in the same tab. Course instructions tell learners to use browser Back. This launch and return to the saved course page were tested successfully; the superseded native Hotspot was removed.
 
-Launcher tested at 320×180, 375×211, 768×432 and 860×484: no document overflow and all visible text/control/image bounds fit. Standalone widths tested at 320, 375, 768, 1024 and 1440px: no horizontal overflow or out-of-width controls. Full learner/browser/device QA details are recorded with the course; actual deployed LMS fit must be tested separately before replacement of the native activity.
+The V2 Embed frame is 16:9. Its sandbox was observed as `allow-forms allow-presentation allow-scripts`, without `allow-popups`; therefore the otherwise correctly sized embedded launch panel cannot open its new-tab game link. Do not use that panel as the V2 launch route. The authoring hub now offers the verified native course button URL instead. Other hosts must be tested separately before using embedded launch links.
+
+The standalone game uses normal page scrolling on narrow screens, with no nested scrolling panes. Launcher geometry was checked, but geometry alone did not prove functional host permission. Verify link activation in actual learner preview.
 
 ## Publication
 
-Awaiting publication until the branch is reviewed/merged, the matching Pages deployment succeeds and the exact versioned URL returns 200 with `meta[name=ukwa-build]` equal to `ppe-check-20261113-v01`. The updated authoring hub gates launch/copy controls on these checks. Do not auto-merge. Historical activities and versions stay unchanged.
+Published after Patrick explicitly authorised publication. PR13 merged as `7174b30ef43341717464b605ce47b51177a1221d`; Pages run43425636357 succeeded. The exact versioned URL returned200, the expected `ppe-check-20261113-v01` marker and bytes identical to the final local release. The updated authoring hub gates launch/copy controls on these checks. Do not auto-merge. Historical activities and versions stay unchanged.

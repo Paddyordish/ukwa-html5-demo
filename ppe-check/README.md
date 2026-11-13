@@ -6,7 +6,7 @@ Build: `python3 scripts/build-ppe-check.py` (`npm run build:ppe`). Edit `source.
 
 Six decisions cover a damaged helmet, dirty goggles, missing required high visibility, unsuitable gloves, poor PPE fit and untied shoelaces. Options shuffle; only a correct safe decision resolves a check. Wrong choices allow retry without penalty. Opening every item does not complete the game. Completion requires all six correct decisions. Revisit and replay supported; replay/reload resets all practice progress. No timer, audio, network calls, personal data, persistence, SCORM/xAPI, native LMS scores/completion or cross-tab resume.
 
-Keyboard: Tab/Shift+Tab and Enter/Space. Matching helmet, goggles, vest, gloves, trousers and boot icons replace numeric markers on the poster and kit buttons. Resolved items retain their PPE icon with a small tick. Poster icons and text buttons access the same checks. Text view hides the poster without removing any scenario or action. Reduced-motion preference respected. Standalone page uses normal document scrolling on small screens; no nested scrolling panes.
+Keyboard: Tab/Shift+Tab and Enter/Space. The original poster is displayed unchanged, with no added markers or overlay icons. Matching helmet, goggles, vest, gloves, trousers and boot icons appear only on the kit buttons. Resolved buttons retain their PPE icon with a small tick. The kit buttons open the checks. Text view hides the poster without removing any scenario or action. Reduced-motion preference respected. Standalone page uses normal document scrolling on small screens; no nested scrolling panes.
 
 ## V2 embed
 
